@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resources — JumpyMouse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.page-head { padding: 64px 0 40px; }
+.page-head h1 { font-family: "Newsreader", serif; font-size: clamp(40px, 5vw, 64px); margin: 12px 0 16px; line-height: 1.05; letter-spacing: -.02em; font-weight: 500; }
+.page-head h1 em { font-style: italic; color: var(--coral-2); }
+[data-theme="dark"] .page-head h1 em { color: var(--coral); }
+.page-head p { font-size: 18px; color: var(--ink-2); max-width: 60ch; margin: 0; }
+
+/* Featured */
+.featured-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; margin-bottom: 48px; }
+@media (max-width: 900px) { .featured-grid { grid-template-columns: 1fr; } }
+
+.feat-post {
+  background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 8px; padding: 0; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.feat-cover {
+  height: 280px; background: var(--navy-900);
+  position: relative; overflow: hidden;
+  display: grid; place-items: center;
+}
+.feat-cover::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(217,106,74,.4), transparent 50%),
+    repeating-linear-gradient(45deg, transparent 0 12px, rgba(255,255,255,.03) 12px 13px);
+}
+.feat-cover .topic {
+  font-family: "Newsreader", serif; font-size: 80px; font-weight: 600;
+  color: rgba(246,241,232,.95); line-height: 1; letter-spacing: -.03em;
+  padding: 20px; text-align: center; position: relative;
+  font-style: italic;
+}
+.feat-cover .topic span { color: var(--coral); font-style: normal; }
+.feat-meta { padding: 24px 28px; }
+.feat-meta .row { font-size: 12px; color: var(--muted); font-family: "JetBrains Mono", monospace; margin-bottom: 12px; gap: 12px; }
+.feat-meta h2 { font-family: "Newsreader", serif; font-size: clamp(24px, 3vw, 32px); margin: 0 0 12px; font-weight: 600; line-height: 1.15; letter-spacing: -.01em; }
+.feat-meta p { color: var(--ink-2); font-size: 15px; line-height: 1.5; margin: 0 0 16px; }
+.feat-meta .read-more { font-size: 14px; color: var(--coral-2); font-weight: 500; }
+[data-theme="dark"] .feat-meta .read-more { color: var(--coral); }
+
+/* Sidebar promo */
+.side-promo {
+  background: var(--navy-900); color: var(--paper);
+  border-radius: 8px; padding: 28px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.side-promo h3 { font-family: "Newsreader", serif; font-size: 24px; margin: 0; font-weight: 600; }
+.side-promo p { color: rgba(246,241,232,.75); font-size: 14px; margin: 0; line-height: 1.5; }
+.side-promo .form { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.side-promo input { padding: 11px 14px; border-radius: 6px; border: 1px solid rgba(246,241,232,.2); background: rgba(0,0,0,.3); color: var(--paper); font-family: inherit; font-size: 14px; }
+.side-promo input::placeholder { color: rgba(246,241,232,.5); }
+.side-promo .stat { display: flex; gap: 8px; align-items: baseline; padding-top: 12px; margin-top: 4px; border-top: 1px solid rgba(246,241,232,.15); }
+.side-promo .stat-num { font-family: "Newsreader", serif; font-size: 28px; font-weight: 600; color: var(--coral); }
+.side-promo .stat-lbl { color: rgba(246,241,232,.7); font-size: 13px; }
+
+/* Categories */
+.cat-row { display: flex; gap: 8px; flex-wrap: wrap; padding-bottom: 32px; border-bottom: 1px solid var(--line); margin-bottom: 32px; }
+.cat {
+  padding: 8px 14px; font-size: 13px; font-weight: 500;
+  background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 100px; color: var(--ink-2); cursor: pointer;
+  font-family: inherit; transition: all .15s;
+}
+.cat:hover { border-color: var(--fg); color: var(--fg); }
+.cat.active { background: var(--navy-900); border-color: var(--navy-900); color: var(--paper); }
+
+/* Post grid */
+.post-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 64px; }
+@media (max-width: 900px) { .post-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .post-grid { grid-template-columns: 1fr; } }
+
+.post {
+  background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 8px; overflow: hidden;
+  display: flex; flex-direction: column; transition: all .15s;
+}
+.post:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.post-cover {
+  aspect-ratio: 16 / 9; position: relative; overflow: hidden;
+  background: var(--paper-2);
+}
+.post-cover.style-a { background: linear-gradient(140deg, #15294d, #0f1f3a); }
+.post-cover.style-b { background: linear-gradient(140deg, #d96a4a, #b9532f); }
+.post-cover.style-c { background: linear-gradient(140deg, #c8a253, #a07d28); }
+.post-cover.style-d { background: linear-gradient(140deg, #4a5530, #2d3919); }
+.post-cover.style-e { background: linear-gradient(140deg, #1a2742, #0a1628); }
+.post-cover.style-f { background: linear-gradient(140deg, #efe7d6, #d9cfbb); }
+.post-cover .pattern {
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 23px, rgba(255,255,255,.05) 23px 24px),
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(255,255,255,.05) 23px 24px);
+}
+.post-cover.style-f .pattern { background:
+    repeating-linear-gradient(90deg, transparent 0 23px, rgba(0,0,0,.05) 23px 24px),
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(0,0,0,.05) 23px 24px); }
+.post-cover .label {
+  position: absolute; inset: 24px;
+  display: flex; align-items: flex-end;
+  font-family: "Newsreader", serif; font-style: italic;
+  font-size: 36px; font-weight: 500; line-height: 1;
+  color: rgba(246,241,232,.95); letter-spacing: -.02em;
+}
+.post-cover.style-f .label { color: var(--ink); }
+.post-cover .num {
+  position: absolute; top: 16px; right: 16px;
+  font-family: "JetBrains Mono", monospace; font-size: 11px;
+  color: rgba(246,241,232,.6); letter-spacing: .1em;
+}
+.post-cover.style-f .num { color: rgba(0,0,0,.4); }
+
+.post-meta { padding: 20px 24px 24px; flex: 1; display: flex; flex-direction: column; }
+.post-meta .top { display: flex; gap: 10px; font-size: 12px; color: var(--muted); font-family: "JetBrains Mono", monospace; margin-bottom: 8px; }
+.post-meta h3 { font-family: "Newsreader", serif; font-size: 22px; margin: 0 0 10px; font-weight: 600; line-height: 1.2; letter-spacing: -.01em; }
+.post-meta p { color: var(--ink-2); font-size: 14px; line-height: 1.5; margin: 0 0 12px; flex: 1; }
+.post-meta .author { display: flex; align-items: center; gap: 8px; padding-top: 12px; border-top: 1px solid var(--card-line); font-size: 12px; }
+.post-meta .author .ava { width: 22px; height: 22px; border-radius: 50%; background: var(--navy-900); color: var(--paper); display: grid; place-items: center; font-size: 10px; font-weight: 600; }
+.post-meta .author .name { font-weight: 500; }
+.post-meta .author .ts { color: var(--muted); margin-left: auto; }
+
+/* Newsletter */
+.newsletter {
+  background: var(--paper-2); border: 1px solid var(--line);
+  border-radius: 12px; padding: 56px 48px;
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center;
+}
+@media (max-width: 800px) { .newsletter { grid-template-columns: 1fr; padding: 32px 28px; } }
+.newsletter h2 { font-family: "Newsreader", serif; font-size: clamp(28px, 3.5vw, 40px); margin: 0 0 12px; font-weight: 500; letter-spacing: -.02em; line-height: 1.1; }
+.newsletter h2 em { font-style: italic; color: var(--coral-2); }
+[data-theme="dark"] .newsletter h2 em { color: var(--coral); }
+.newsletter p { color: var(--ink-2); font-size: 16px; margin: 0; line-height: 1.55; }
+.newsletter .form { display: flex; gap: 8px; }
+.newsletter input { flex: 1; padding: 14px 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); font-family: inherit; font-size: 14px; }
+.newsletter .meta { font-size: 12px; color: var(--muted); margin-top: 12px; font-family: "JetBrains Mono", monospace; }
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+
+<main>
+  <section class="page-head">
+    <div class="wrap">
+      <div class="eyebrow">Resources</div>
+      <h1>Notes from <em>25 years on the inside.</em></h1>
+      <p>Honest writing about resumes, IT careers, and the things hiring committees actually argue about. New piece every other Tuesday.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="featured-grid">
+      <article class="feat-post">
+        <div class="feat-cover">
+          <div class="topic">The <span>8-second</span><br>resume.</div>
+        </div>
+        <div class="feat-meta">
+          <div class="row">
+            <span>FEATURED</span><span>·</span><span>Apr 09, 2026</span><span>·</span><span>11 min read</span>
+          </div>
+          <h2>What recruiters actually do in the first 8 seconds (and why your "Summary" is failing you).</h2>
+          <p>I sat behind hiring committees at Red Hat for a decade. The conventional wisdom about how recruiters scan resumes is mostly wrong — here's what actually happens, with eye-tracking data and real examples from my files.</p>
+          <a href="#" class="read-more">Read the piece →</a>
+        </div>
+      </article>
+
+      <aside class="side-promo">
+        <h3>Get the field manual</h3>
+        <p>A 28-page PDF I send new clients before our intake call. Self-edit checklist, the "verb library," and the bullet template that's done most of the work.</p>
+        <div class="form">
+          <input type="email" placeholder="you@domain.com">
+          <button class="btn btn-coral">Send it to me</button>
+        </div>
+        <div class="stat">
+          <span class="stat-num">9,142</span>
+          <span class="stat-lbl">IT pros on the list</span>
+        </div>
+      </aside>
+    </div>
+
+    <div class="cat-row">
+      <button class="cat active">All posts</button>
+      <button class="cat">Resume craft</button>
+      <button class="cat">Interviews</button>
+      <button class="cat">ATS & format</button>
+      <button class="cat">Compensation</button>
+      <button class="cat">Veteran transition</button>
+      <button class="cat">Federal jobs</button>
+    </div>
+
+    <div class="post-grid">
+      <!-- 1 -->
+      <article class="post">
+        <div class="post-cover style-b">
+          <div class="pattern"></div>
+          <span class="num">№ 042</span>
+          <div class="label">Quantify<br>or perish.</div>
+        </div>
+        <div class="post-meta">
+          <div class="top"><span>RESUME CRAFT</span><span>·</span><span>9 min</span></div>
+          <h3>Quantify or perish: 14 numbers every IT bullet should have.</h3>
+          <p>"Improved performance" is air. Here's the cheat sheet of metrics IT folks routinely undervalue — and how to sneak them out of postmortems and Slack threads.</p>
+          <div class="author">
+            <div class="ava">JM</div>
+            <span class="name">The founder</span>
+            <span class="ts">Apr 02, 2026</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2 -->
+      <article class="post">
+        <div class="post-cover style-a">
+          <div class="pattern"></div>
+          <span class="num">№ 041</span>
+          <div class="label">When to<br>leave SRE.</div>
+        </div>
+        <div class="post-meta">
+          <div class="top"><span>CAREER</span><span>·</span><span>14 min</span></div>
+          <h3>When (and how) a Senior SRE should make the leap to Staff.</h3>
+          <p>The Senior → Staff jump is where many SRE careers stall — not because of skill, but because the resume keeps reading like a Senior's. What to add, what to delete.</p>
+          <div class="author">
+            <div class="ava">JM</div>
+            <span class="name">The founder</span>
+            <span class="ts">Mar 26, 2026</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3 -->
+      <article class="post">
+        <div class="post-cover style-c">
+          <div class="pattern"></div>
+          <span class="num">№ 040</span>
+          <div class="label">Translating<br>the Navy.</div>
+        </div>
+        <div class="post-meta">
+          <div class="top"><span>VETERAN</span><span>·</span><span>17 min</span></div>
+          <h3>The veteran's translation guide: 31 acronyms civilians can't parse.</h3>
+          <p>Real Navy and DoD acronyms paired with the civilian phrase that actually communicates them. The list I wish I'd had in 2001.</p>
+          <div class="author">
+            <div class="ava">JM</div>
+            <span class="name">The founder</span>
+            <span class="ts">Mar 19, 2026</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4 -->
+      <article class="post">
+        <div class="post-cover style-e">
+          <div class="pattern"></div>
+          <span class="num">№ 039</span>
+          <div class="label">ATS,<br>demystified.</div>
+        </div>
+        <div class="post-meta">
+          <div class="top"><span>ATS & FORMAT</span><span>·</span><span>10 min</span></div>
+          <h3>ATS, demystified: what Workday actually does to your PDF.</h3>
+          <p>I ran 30 resumes through Workday, Greenhouse, and Lever. The failure modes are predictable, and the fixes take 10 minutes. Here's the diff.</p>
+          <div class="author">
+            <div class="ava">JM</div>
+            <span class="name">The founder</span>
+            <span class="ts">Mar 12, 2026</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 5 -->
+      <article class="post">
+        <div class="post-cover style-f">
+          <div class="pattern"></div>
+          <span class="num">№ 038</span>
+          <div class="label">The $30k<br>bullet.</div>
+        </div>
+        <div class="post-meta">
+          <div class="top"><span>COMPENSATION</span><span>·</span><span>8 min</span></div>
+          <h3>The $30,000 bullet: how a single line moved a client's offer.</h3>
+          <p>Anonymized walkthrough of one bullet rewrite that pushed an offer from $185k to $215k. The anatomy of the change, and why it worked.</p>
+          <div class="author">
+            <div class="ava">JM</div>
+            <span class="name">The founder</span>
+            <span class="ts">Mar 05, 2026</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 6 -->
+      <article class="post">
+        <div class="post-cover style-d">
+          <div class="pattern"></div>
+          <span class="num">№ 037</span>
+          <div class="label">USAJobs<br>without tears.</div>
+        </div>
+        <div class="post-meta">
+          <div class="top"><span>FEDERAL</span><span>·</span><span>22 min</span></div>
+          <h3>USAJobs without tears: the federal resume from scratch.</h3>
+          <p>Why federal resumes look the way they do, what HR specialists are scoring against, and the structure that actually clears Best Qualified.</p>
+          <div class="author">
+            <div class="ava">JM</div>
+            <span class="name">The founder</span>
+            <span class="ts">Feb 26, 2026</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 7 -->
+      <article class="post">
+        <div class="post-cover style-b">
+          <div class="pattern"></div>
+          <span class="num">№ 036</span>
+          <div class="label">"Tell me about<br>a time…"</div>
+        </div>
+        <div class="post-meta">
+          <div class="top"><span>INTERVIEWS</span><span>·</span><span>12 min</span></div>
+          <h3>The behavioral interview cheat sheet for engineers who hate stories.</h3>
+          <p>STAR is fine, but most engineers tell STAR badly. A simpler four-beat structure that works in any "tell me about a time" situation.</p>
+          <div class="author">
+            <div class="ava">JM</div>
+            <span class="name">The founder</span>
+            <span class="ts">Feb 19, 2026</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 8 -->
+      <article class="post">
+        <div class="post-cover style-a">
+          <div class="pattern"></div>
+          <span class="num">№ 035</span>
+          <div class="label">No degree?<br>No problem.</div>
+        </div>
+        <div class="post-meta">
+          <div class="top"><span>RESUME CRAFT</span><span>·</span><span>11 min</span></div>
+          <h3>No CS degree? Here's what to put in its place.</h3>
+          <p>Self-taught, bootcamp, military background — none of it disqualifies you. What to lead with so the gap stops being the story.</p>
+          <div class="author">
+            <div class="ava">JM</div>
+            <span class="name">The founder</span>
+            <span class="ts">Feb 12, 2026</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 9 -->
+      <article class="post">
+        <div class="post-cover style-c">
+          <div class="pattern"></div>
+          <span class="num">№ 034</span>
+          <div class="label">The honest<br>skills section.</div>
+        </div>
+        <div class="post-meta">
+          <div class="top"><span>RESUME CRAFT</span><span>·</span><span>7 min</span></div>
+          <h3>Stop listing every framework you've touched. The honest skills section.</h3>
+          <p>If your skills list has more than 24 items, half of them are working against you. How to organize, prioritize, and quietly drop the dead weight.</p>
+          <div class="author">
+            <div class="ava">JM</div>
+            <span class="name">The founder</span>
+            <span class="ts">Feb 05, 2026</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+      <div>
+        <div class="eyebrow">The Tuesday Memo</div>
+        <h2>One <em>actually useful</em> idea per fortnight.</h2>
+        <p>Resume craft, IT-career notes, and the occasional war story. Every other Tuesday. Unsubscribe with one click — I won't take it personally.</p>
+      </div>
+      <div>
+        <div class="form">
+          <input type="email" placeholder="you@domain.com">
+          <button class="btn btn-coral">Subscribe</button>
+        </div>
+        <div class="meta">9,142 readers · zero spam · zero AI summaries</div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div style="height:80px;"></div>
+<div id="footer-mount"></div>
+<script src="partials.js"></script>
+<script>renderShell('blog.html');</script>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JumpyMouse — Resumes for IT Professionals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Hero */
+.hero { padding: 56px 0 80px; position: relative; overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 64px; align-items: center; }
+.hero h1 {
+  font-family: "Newsreader", serif; font-weight: 500;
+  font-size: clamp(44px, 5.6vw, 76px);
+  line-height: 1.02; letter-spacing: -0.025em;
+  margin: 24px 0 24px;
+  text-wrap: balance;
+}
+.hero h1 em { font-style: italic; color: var(--coral-2); font-weight: 500; }
+[data-theme="dark"] .hero h1 em { color: var(--coral); }
+.hero p.lede { font-size: 19px; color: var(--ink-2); max-width: 50ch; line-height: 1.5; margin: 0 0 32px; }
+.hero-ctas { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.hero-trust { display: flex; gap: 24px; margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+.hero-trust-item .num { font-family: "Newsreader", serif; font-size: 32px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; }
+.hero-trust-item .num em { color: var(--coral-2); font-style: normal; }
+[data-theme="dark"] .hero-trust-item .num em { color: var(--coral); }
+.hero-trust-item .lbl { font-size: 12px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: .08em; }
+@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+/* Hero resume preview */
+.resume-stack { position: relative; height: 560px; }
+.resume-doc {
+  position: absolute; background: white; color: #1a1a1a;
+  border-radius: 4px; box-shadow: var(--shadow);
+  padding: 28px 30px; font-size: 9px;
+  border: 1px solid #e5e0d2;
+  width: 360px;
+  font-family: "Geist", sans-serif;
+  line-height: 1.4;
+}
+.resume-doc h3 { font-size: 18px; margin: 0 0 2px; font-family: "Newsreader", serif; font-weight: 600; letter-spacing: -.01em; color: #0f1f3a;}
+.resume-doc .role { color: #555; font-size: 10px; margin-bottom: 6px; }
+.resume-doc .meta { color: #888; font-size: 8px; letter-spacing: .04em; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #ebe5d3; }
+.resume-doc .sec-title { font-size: 9px; text-transform: uppercase; letter-spacing: .14em; color: #d96a4a; font-weight: 700; margin: 12px 0 6px; }
+.resume-doc .job-title { font-weight: 600; color: #0f1f3a; font-size: 10px; }
+.resume-doc .job-meta { color: #888; font-size: 8px; margin-bottom: 4px; }
+.resume-doc ul { list-style: none; padding: 0; margin: 4px 0 10px; }
+.resume-doc ul li { padding-left: 8px; position: relative; margin-bottom: 3px; color: #2a2a2a; }
+.resume-doc ul li::before { content: "▸"; position: absolute; left: 0; color: #d96a4a; }
+.resume-doc .skill-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.resume-doc .skill-row span { background: #f5efe0; color: #4a3f25; padding: 2px 6px; border-radius: 2px; font-family: "JetBrains Mono", monospace; font-size: 7.5px; }
+
+.doc-1 { left: 0; top: 20px; transform: rotate(-4deg); z-index: 1; }
+.doc-2 { right: 0; top: 0; transform: rotate(3deg); z-index: 2; }
+.doc-3 { left: 50%; bottom: 0; transform: translateX(-50%) rotate(-1deg); z-index: 3; }
+
+.float-tag {
+  position: absolute; background: var(--navy-900); color: var(--paper);
+  padding: 8px 14px; border-radius: 100px; font-size: 12px; font-weight: 500;
+  display: flex; align-items: center; gap: 6px;
+  box-shadow: var(--shadow);
+  z-index: 10;
+}
+.float-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; }
+.tag-1 { top: 60px; right: -10px; }
+.tag-2 { bottom: 80px; left: -20px; background: var(--coral); }
+
+/* Logo strip */
+.logos { padding: 32px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.logos-row { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+.logos-label { font-size: 12px; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); white-space: nowrap; }
+.logo-pill {
+  font-family: "Newsreader", serif; font-size: 18px; font-weight: 600;
+  color: var(--ink-2); letter-spacing: -0.01em;
+  opacity: .75;
+}
+.logo-pill.mono { font-family: "JetBrains Mono", monospace; font-size: 14px; font-weight: 500; }
+
+/* Process */
+.process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.process-step { padding: 28px 24px; background: var(--card); border: 1px solid var(--card-line); border-radius: var(--radius); position: relative; }
+.process-num {
+  font-family: "JetBrains Mono", monospace; font-size: 12px;
+  color: var(--coral-2); font-weight: 600;
+  margin-bottom: 12px;
+}
+[data-theme="dark"] .process-num { color: var(--coral); }
+.process-step h3 { font-family: "Newsreader", serif; font-size: 22px; margin: 0 0 8px; font-weight: 600; }
+.process-step p { color: var(--ink-2); font-size: 14px; margin: 0; line-height: 1.5; }
+@media (max-width: 900px) { .process-grid { grid-template-columns: 1fr 1fr; } }
+
+/* Services teaser */
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.svc { padding: 32px 28px; background: var(--bg); transition: background .15s; cursor: default; }
+.svc:hover { background: var(--card); }
+.svc-icon { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 4px; background: var(--paper-2); color: var(--coral-2); margin-bottom: 16px; }
+[data-theme="dark"] .svc-icon { background: var(--navy-100); color: var(--coral); }
+.svc h3 { font-family: "Newsreader", serif; font-size: 22px; margin: 0 0 8px; font-weight: 600; }
+.svc p { color: var(--ink-2); font-size: 14px; margin: 0 0 12px; line-height: 1.5; }
+.svc .price { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--muted); }
+@media (max-width: 900px) { .services-grid { grid-template-columns: 1fr; } }
+
+/* Testimonials */
+.quote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.quote {
+  padding: 32px; background: var(--card); border: 1px solid var(--card-line);
+  border-radius: var(--radius); position: relative;
+}
+.quote .mark { font-family: "Newsreader", serif; font-size: 60px; line-height: 1; color: var(--coral); position: absolute; top: 12px; right: 24px; }
+.quote blockquote { font-family: "Newsreader", serif; font-size: 20px; line-height: 1.4; margin: 0 0 20px; font-weight: 500; letter-spacing: -.01em; }
+.quote .author { display: flex; align-items: center; gap: 12px; }
+.quote .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--navy-900); color: var(--paper); display: grid; place-items: center; font-weight: 600; font-size: 14px; }
+.quote .who { font-size: 14px; font-weight: 500; }
+.quote .role { font-size: 13px; color: var(--muted); }
+@media (max-width: 900px) { .quote-grid { grid-template-columns: 1fr; } }
+
+/* Before/after */
+.ba-tabs { display: flex; gap: 4px; margin-bottom: 20px; padding: 4px; background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--radius); width: fit-content; }
+.ba-tab { padding: 8px 16px; font-size: 13px; font-weight: 500; border: 0; background: transparent; color: var(--ink-2); border-radius: 4px; }
+.ba-tab.active { background: var(--bg); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ba-pane { padding: 28px; border-radius: var(--radius); border: 1px solid var(--card-line); background: var(--card); }
+.ba-pane.before { background: color-mix(in oklab, #999 10%, var(--card)); position: relative; }
+.ba-pane.before::after { content: "Before"; position: absolute; top: 16px; right: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-family: "JetBrains Mono", monospace; }
+.ba-pane.after { border-color: var(--coral); background: color-mix(in oklab, var(--coral) 6%, var(--card)); position: relative; }
+.ba-pane.after::after { content: "After"; position: absolute; top: 16px; right: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--coral-2); font-family: "JetBrains Mono", monospace; font-weight: 600; }
+[data-theme="dark"] .ba-pane.after::after { color: var(--coral); }
+.ba-line { font-size: 13px; line-height: 1.6; color: var(--ink-2); padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.ba-line:last-child { border: 0; }
+.ba-line.dim { opacity: .55; }
+.ba-line.bold { color: var(--fg); font-weight: 500; }
+.ba-pane h4 { font-family: "Newsreader", serif; font-size: 20px; margin: 0 0 12px; font-weight: 600; }
+@media (max-width: 900px) { .ba-grid { grid-template-columns: 1fr; } }
+
+/* Big CTA */
+.big-cta {
+  background: var(--navy-900); color: var(--paper);
+  border-radius: 12px; padding: 64px 48px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.big-cta::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 100%, rgba(217,106,74,.25), transparent 60%);
+  pointer-events: none;
+}
+.big-cta h2 { font-family: "Newsreader", serif; font-size: clamp(32px, 4vw, 52px); margin: 0 0 16px; font-weight: 500; letter-spacing: -.02em; line-height: 1.05; position: relative; }
+.big-cta h2 em { font-style: italic; color: var(--coral); }
+.big-cta p { font-size: 18px; color: rgba(246,241,232,.75); margin: 0 0 28px; max-width: 50ch; margin: 0 auto 28px; position: relative; }
+.big-cta .row { justify-content: center; position: relative; }
+
+/* guarantee row */
+.guarantee {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  margin-top: 48px; padding-top: 48px; border-top: 1px solid var(--line);
+}
+.gtee-item { display: flex; gap: 14px; align-items: flex-start; }
+.gtee-icon { width: 36px; height: 36px; flex-shrink: 0; background: var(--paper-2); border-radius: var(--radius); display: grid; place-items: center; color: var(--coral-2); }
+[data-theme="dark"] .gtee-icon { background: var(--navy-100); color: var(--coral); }
+.gtee-item h4 { font-family: "Newsreader", serif; font-size: 18px; margin: 0 0 4px; font-weight: 600; }
+.gtee-item p { font-size: 13px; color: var(--ink-2); margin: 0; line-height: 1.5; }
+@media (max-width: 900px) { .guarantee { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body style="background-color: rgb(240, 239, 239); font-family: Times">
+
+<div id="nav-mount"></div>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <span class="badge badge-vet"><span class="star">★</span> Navy Veteran-Owned · 25+ Years at Red Hat</span>
+          <h1>Resumes built <em>by an IT lifer</em>, for IT lifers.</h1>
+          <p class="lede">After 25 years writing job specs, screening candidates, and mentoring engineers at Red Hat — and a Navy career before that — I help IT professionals turn deep, complicated work histories into resumes that recruiters actually finish reading.</p>
+          <div class="hero-ctas">
+            <a href="order.html" class="btn btn-coral btn-lg">Start your resume — $0 to begin</a>
+            <a href="samples.html" class="btn btn-ghost btn-lg">See 10 samples →</a>
+          </div>
+          <div class="hero-trust">
+            <div class="hero-trust-item">
+              <div class="num">3.4<em>×</em></div>
+              <div class="lbl">Avg interview lift</div>
+            </div>
+            <div class="hero-trust-item">
+              <div class="num">680<em>+</em></div>
+              <div class="lbl">IT pros placed</div>
+            </div>
+            <div class="hero-trust-item">
+              <div class="num">14<em>d</em></div>
+              <div class="lbl">Money-back window</div>
+            </div>
+            <div class="hero-trust-item">
+              <div class="num">4.9<em>★</em></div>
+              <div class="lbl">From 312 reviews</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="resume-stack" aria-hidden="true">
+          <div class="float-tag tag-1"><span class="dot"></span>ATS-passed</div>
+          <div class="float-tag tag-2">+ Recruiter-ready</div>
+
+          <div class="resume-doc doc-1">
+            <h3>Marcus T. Holloway</h3>
+            <div class="role">Senior Site Reliability Engineer</div>
+            <div class="meta">Austin, TX · marcus.h@mail.com · linkedin.com/in/mholloway</div>
+            <div class="sec-title">Summary</div>
+            <p style="margin: 0 0 8px; color:#2a2a2a;">SRE with 11 years scaling Kubernetes platforms across hybrid cloud — reduced MTTR by 62% across two Fortune-500 deployments.</p>
+            <div class="sec-title">Experience</div>
+            <div class="job-title">Staff SRE · Cloudbase Inc.</div>
+            <div class="job-meta">Mar 2021 – Present</div>
+            <ul>
+              <li>Led migration of 240 microservices to GKE</li>
+              <li>Cut on-call paging volume 47% via SLO redesign</li>
+            </ul>
+          </div>
+
+          <div class="resume-doc doc-2">
+            <h3>Priya N. Ramaswamy</h3>
+            <div class="role">Cloud Security Architect</div>
+            <div class="meta">Remote · priya.r@mail.com</div>
+            <div class="sec-title">Core Skills</div>
+            <div class="skill-row">
+              <span>AWS</span><span>Zero-Trust</span><span>SOC2</span><span>Terraform</span><span>IAM</span><span>Kubernetes</span>
+            </div>
+            <div class="sec-title">Experience</div>
+            <div class="job-title">Principal Security Engineer · Vector Health</div>
+            <div class="job-meta">Sep 2022 – Present</div>
+            <ul>
+              <li>Designed zero-trust mesh covering 4,200 endpoints</li>
+              <li>Closed FedRAMP-Moderate audit with zero findings</li>
+            </ul>
+          </div>
+
+          <div class="resume-doc doc-3" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logo strip -->
+  <section class="logos tight">
+    <div class="wrap">
+      <div class="logos-row">
+        <span class="logos-label">Clients have landed at</span>
+        <span class="logo-pill">Datadog</span>
+        <span class="logo-pill mono">GitLab</span>
+        <span class="logo-pill">Cloudflare</span>
+        <span class="logo-pill mono">HashiCorp</span>
+        <span class="logo-pill">Stripe</span>
+        <span class="logo-pill mono">Snowflake</span>
+        <span class="logo-pill">IBM</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why JumpyMouse -->
+  <section>
+    <div class="wrap">
+      <div class="section-head" style="max-width: 740px;">
+        <div class="eyebrow">Why JumpyMouse</div>
+        <h2 class="serif">Most resume writers <em style="font-style:italic; color:var(--coral-2);">don't know what you do.</em></h2>
+        <p>I do. I've sat on the other side of the table at Red Hat — reviewing thousands of resumes from kernel devs, SREs, security engineers, solutions architects, and PMs. I know which phrases land with hiring managers, which ones get auto-filtered by ATS, and which ones get an immediate "send to phone screen."</p>
+      </div>
+
+      <div class="services-grid">
+        <div class="svc">
+          <div class="svc-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          </div>
+          <h3>Resume writing</h3>
+          <p>Engineer, architect, manager, or director — written from scratch, ATS-clean, scoped to your target role.</p>
+          <div class="price">From $349</div>
+        </div>
+        <div class="svc">
+          <div class="svc-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </div>
+          <h3>LinkedIn optimization</h3>
+          <p>Headline, About, role rewrites, and skill ordering — tuned for recruiter search and inbound DMs.</p>
+          <div class="price">From $189</div>
+        </div>
+        <div class="svc">
+          <div class="svc-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3>Cover letters</h3>
+          <p>Role-targeted cover letters that don't sound like everyone else's. Includes one revision round.</p>
+          <div class="price">From $99</div>
+        </div>
+        <div class="svc">
+          <div class="svc-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h3>Salary negotiation</h3>
+          <p>Live coaching session before you respond to an offer. Know your number and how to defend it.</p>
+          <div class="price">$249 / session</div>
+        </div>
+        <div class="svc">
+          <div class="svc-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M9 9h6v6H9z"/></svg>
+          </div>
+          <h3>Interview coaching</h3>
+          <p>Mock loops for system design, behavioral, and "tell me about a time" rounds. With recordings.</p>
+          <div class="price">$199 / session</div>
+        </div>
+        <div class="svc">
+          <div class="svc-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+          </div>
+          <h3>Federal resumes</h3>
+          <p>USAJobs / KSA-compliant resumes for GS-12 through SES. Includes assessment-questionnaire prep.</p>
+          <div class="price">From $549</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section style="background: var(--paper-2);">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">How it works</div>
+        <h2 class="serif">Four steps. Two weeks. One resume that lands interviews.</h2>
+      </div>
+      <div class="process-grid">
+        <div class="process-step">
+          <div class="process-num">01 / DISCOVERY</div>
+          <h3>60-min intake call</h3>
+          <p>We dig into your work history, the roles you want, and the stories you've been undervaluing. I record it so I can quote you back to you.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">02 / DRAFT</div>
+          <h3>First draft in 5 days</h3>
+          <p>You get a fully-written first draft with margin notes explaining every choice — what to defend, what's negotiable, what's still missing.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">03 / REVISE</div>
+          <h3>Two revision rounds</h3>
+          <p>Track-changes back-and-forth. Most clients only need one round. Major rewrites count as one round, not two.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">04 / LAUNCH</div>
+          <h3>Final files + 30-day support</h3>
+          <p>You get .docx, .pdf, ATS-plain-text, and the LinkedIn copy. I'm on email for 30 days for tweaks per posting.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Before/after -->
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Before / After</div>
+        <h2 class="serif">Same engineer. Same job. <em style="font-style:italic; color:var(--coral-2);">Different resume.</em></h2>
+        <p>What this looks like in practice — pulled from a real client (anonymized). Senior backend engineer, 9 years experience, applying to platform roles.</p>
+      </div>
+      <div class="ba-tabs" id="ba-tabs">
+        <button class="ba-tab active" data-tab="summary">Summary</button>
+        <button class="ba-tab" data-tab="bullet">A bullet</button>
+        <button class="ba-tab" data-tab="skills">Skills</button>
+      </div>
+      <div class="ba-grid">
+        <div class="ba-pane before">
+          <h4 id="ba-before-title">Summary</h4>
+          <div id="ba-before"></div>
+        </div>
+        <div class="ba-pane after">
+          <h4 id="ba-after-title">Summary</h4>
+          <div id="ba-after"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section style="background: var(--paper-2);">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">From the inbox</div>
+        <h2 class="serif">What clients say after they sign the offer.</h2>
+      </div>
+      <div class="quote-grid">
+        <div class="quote">
+          <div class="mark">"</div>
+          <blockquote>I'd been applying for 7 months with maybe 2 phone screens. After working with JumpyMouse I had 4 onsites in three weeks. Same experience. Same me. Just told properly.</blockquote>
+          <div class="author">
+            <div class="avatar">DK</div>
+            <div>
+              <div class="who">Derek K.</div>
+              <div class="role">Staff Platform Eng → Datadog</div>
+            </div>
+          </div>
+        </div>
+        <div class="quote">
+          <div class="mark">"</div>
+          <blockquote>I'm transitioning from 22 years in the Marines into civilian InfoSec. He spoke my language and translated it into theirs. Got two GS-13 offers and a private-sector offer at $182k.</blockquote>
+          <div class="author">
+            <div class="avatar" style="background:var(--coral)">JR</div>
+            <div>
+              <div class="who">Jasmine R.</div>
+              <div class="role">USMC → Cloud Security Architect</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guarantee">
+        <div class="gtee-item">
+          <div class="gtee-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <h4>14-day money-back guarantee</h4>
+            <p>If we don't click after the intake call and first draft, full refund — no awkward back-and-forth.</p>
+          </div>
+        </div>
+        <div class="gtee-item">
+          <div class="gtee-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4 12 14.01l-3-3"/></svg>
+          </div>
+          <div>
+            <h4>ATS-tested before delivery</h4>
+            <p>Every resume runs through three real ATS parsers (Workday, Greenhouse, Lever) before it ships.</p>
+          </div>
+        </div>
+        <div class="gtee-item">
+          <div class="gtee-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div>
+            <h4>30 days of email support</h4>
+            <p>Found a posting that needs a tweaked version? Send it over. Included with every package.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Big CTA -->
+  <section>
+    <div class="wrap">
+      <div class="big-cta">
+        <h2>The next role isn't going to apply <em>itself.</em></h2>
+        <p>Free 20-minute call to see if we're a fit. No upsell, no pressure — if your resume is already in good shape, I'll tell you.</p>
+        <div class="row">
+          <a href="order.html" class="btn btn-coral btn-lg">Book a free intro call</a>
+          <a href="samples.html" class="btn btn-ghost btn-lg" style="border-color:rgba(246,241,232,.3); color:var(--paper);">Browse samples</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-mount"></div>
+
+<script src="partials.js"></script>
+<script>
+  renderShell('index.html');
+
+  // Before/after tabs
+  const BA = {
+    summary: {
+      before: `<div class="ba-line dim">Experienced software engineer with 9+ years of experience in various technologies including Java, Python, and cloud platforms. Strong problem-solving skills and team player. Looking for new opportunities to grow.</div>`,
+      after: `<div class="ba-line bold">Backend engineer specializing in high-throughput payment systems on AWS.</div>
+              <div class="ba-line">Cut p99 latency 73% on a service handling $2.1B/yr in transactions.</div>
+              <div class="ba-line">Mentors 4 engineers; previous Stripe ICR fast-track.</div>`
+    },
+    bullet: {
+      before: `<div class="ba-line dim">Worked on improving system performance and led various initiatives across teams. Helped with migrations and contributed to code reviews on a regular basis.</div>`,
+      after: `<div class="ba-line bold">Led migration of monolithic billing service (1.4M LoC) to event-driven microservices on EKS — shipped over 14 months with zero customer-visible incidents.</div>
+              <div class="ba-line">Reduced infrastructure cost by $840K/yr.</div>`
+    },
+    skills: {
+      before: `<div class="ba-line dim">Skills: Java, Python, JavaScript, HTML, CSS, SQL, NoSQL, AWS, Docker, Kubernetes, Git, Linux, Agile, Scrum, problem-solving, communication, leadership, teamwork, time management.</div>`,
+      after: `<div class="ba-line bold">Languages</div>
+              <div class="ba-line">Go (primary, 6y) · Python · Java</div>
+              <div class="ba-line bold">Infra</div>
+              <div class="ba-line">AWS (Solutions Architect Pro) · EKS · Terraform · Kafka</div>
+              <div class="ba-line bold">Specialties</div>
+              <div class="ba-line">High-throughput systems · payments · zero-downtime migration</div>`
+    }
+  };
+  const labels = { summary: 'Summary', bullet: 'A bullet', skills: 'Skills' };
+  function setBA(key) {
+    document.getElementById('ba-before').innerHTML = BA[key].before;
+    document.getElementById('ba-after').innerHTML = BA[key].after;
+    document.getElementById('ba-before-title').textContent = labels[key];
+    document.getElementById('ba-after-title').textContent = labels[key];
+    document.querySelectorAll('.ba-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === key));
+  }
+  document.querySelectorAll('.ba-tab').forEach(b => b.addEventListener('click', () => setBA(b.dataset.tab)));
+  setBA('summary');
+</script>
+
+</body>
+</html>

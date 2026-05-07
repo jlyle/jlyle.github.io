@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Start an order — JumpyMouse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.order-shell { display: grid; grid-template-columns: 1fr 380px; gap: 40px; padding: 32px 0 80px; align-items: start; }
+@media (max-width: 900px) { .order-shell { grid-template-columns: 1fr; } }
+
+.order-head { padding: 32px 0 24px; }
+.order-head h1 { font-family: "Newsreader", serif; font-size: clamp(36px, 4.5vw, 56px); margin: 12px 0 12px; line-height: 1.05; letter-spacing: -.02em; font-weight: 500; }
+.order-head h1 em { font-style: italic; color: var(--coral-2); }
+[data-theme="dark"] .order-head h1 em { color: var(--coral); }
+.order-head p { color: var(--ink-2); margin: 0; font-size: 17px; max-width: 60ch; }
+
+/* Stepper */
+.stepper { display: flex; gap: 0; margin-bottom: 28px; border-bottom: 1px solid var(--line); }
+.step-tab {
+  flex: 1; padding: 12px 4px; text-align: center; font-size: 13px; color: var(--muted);
+  border: 0; background: transparent; cursor: pointer; font-family: inherit;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.step-tab .num { width: 22px; height: 22px; border-radius: 50%; background: var(--paper-2); display: grid; place-items: center; font-size: 11px; font-family: "JetBrains Mono", monospace; font-weight: 600; }
+.step-tab.done .num { background: var(--coral); color: white; }
+.step-tab.active { color: var(--fg); border-bottom-color: var(--coral); font-weight: 500; }
+.step-tab.active .num { background: var(--navy-900); color: var(--paper); }
+[data-theme="dark"] .step-tab .num { background: var(--navy-100); }
+
+.form-card { background: var(--card); border: 1px solid var(--card-line); border-radius: 8px; padding: 32px; }
+
+/* Tier picker */
+.tier-pick { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 32px; }
+@media (max-width: 600px) { .tier-pick { grid-template-columns: 1fr; } }
+.tier-card {
+  padding: 20px; border: 1px solid var(--card-line); border-radius: 6px;
+  background: var(--bg); cursor: pointer; transition: all .15s;
+  display: flex; flex-direction: column; gap: 6px; position: relative;
+}
+.tier-card:hover { border-color: var(--coral); }
+.tier-card.selected { border-color: var(--coral); background: color-mix(in oklab, var(--coral) 6%, var(--card)); }
+.tier-card.selected::after { content: "✓"; position: absolute; top: 12px; right: 12px; width: 20px; height: 20px; background: var(--coral); color: white; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+.tier-card .name { font-family: "Newsreader", serif; font-size: 22px; font-weight: 600; }
+.tier-card .price { font-family: "JetBrains Mono", monospace; font-size: 14px; color: var(--coral-2); font-weight: 600; }
+[data-theme="dark"] .tier-card .price { color: var(--coral); }
+.tier-card .desc { font-size: 13px; color: var(--ink-2); }
+
+/* Form fields */
+.field { margin-bottom: 20px; }
+.field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+.field .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.field input, .field select, .field textarea {
+  width: 100%; padding: 11px 14px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--bg); color: var(--fg); font-size: 14px; font-family: inherit;
+}
+.field textarea { resize: vertical; min-height: 100px; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--coral); }
+
+.row-2-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .row-2-fields { grid-template-columns: 1fr; } }
+
+/* Add-ons */
+.addon-pick { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.addon-pill {
+  display: flex; gap: 12px; align-items: center;
+  padding: 14px 16px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--bg); cursor: pointer; transition: all .1s;
+}
+.addon-pill:hover { border-color: var(--ink-2); }
+.addon-pill.checked { border-color: var(--coral); background: color-mix(in oklab, var(--coral) 5%, var(--card)); }
+.addon-pill .check {
+  width: 20px; height: 20px; border-radius: 4px; border: 2px solid var(--line);
+  display: grid; place-items: center; flex-shrink: 0; transition: all .1s;
+  font-size: 12px; color: white;
+}
+.addon-pill.checked .check { background: var(--coral); border-color: var(--coral); }
+.addon-pill.checked .check::after { content: "✓"; font-weight: 700; }
+.addon-pill .info { flex: 1; }
+.addon-pill .info .name { font-weight: 500; font-size: 14px; }
+.addon-pill .info .desc { font-size: 12px; color: var(--muted); }
+.addon-pill .price { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+
+.checkbox-row {
+  display: flex; gap: 10px; align-items: flex-start; padding: 12px;
+  background: var(--paper-2); border-radius: 6px; margin-top: 12px;
+}
+[data-theme="dark"] .checkbox-row { background: var(--navy-100); }
+.checkbox-row input { margin-top: 2px; }
+.checkbox-row label { font-size: 13px; line-height: 1.5; cursor: pointer; }
+.checkbox-row strong { color: var(--coral-2); }
+[data-theme="dark"] .checkbox-row strong { color: var(--coral); }
+
+/* Form actions */
+.form-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--card-line); }
+
+/* Summary card */
+.summary {
+  background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 8px; padding: 24px; position: sticky; top: 80px;
+}
+.summary h3 { font-family: "Newsreader", serif; font-size: 22px; margin: 0 0 4px; font-weight: 600; }
+.summary .sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+.summary .item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--card-line); font-size: 14px; }
+.summary .item .name { color: var(--ink-2); }
+.summary .item .price { font-family: "JetBrains Mono", monospace; font-weight: 500; }
+.summary .item.discount .price { color: var(--coral-2); }
+[data-theme="dark"] .summary .item.discount .price { color: var(--coral); }
+.summary .total { display: flex; justify-content: space-between; padding-top: 14px; margin-top: 6px; font-family: "Newsreader", serif; font-size: 22px; font-weight: 600; border-top: 2px solid var(--card-line); }
+.summary .pay-info { margin-top: 16px; padding: 12px; background: var(--paper-2); border-radius: 6px; font-size: 12px; color: var(--ink-2); line-height: 1.5; }
+[data-theme="dark"] .summary .pay-info { background: var(--navy-100); }
+.summary .pay-info strong { color: var(--fg); }
+.summary .badges-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+
+/* Hidden steps */
+.step-pane { display: none; }
+.step-pane.active { display: block; }
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+
+<main class="wrap">
+  <div class="order-head">
+    <div class="eyebrow">Start an order</div>
+    <h1>Tell me <em>about you.</em> I'll handle the rest.</h1>
+    <p>Three steps, about 6 minutes. You won't be charged until you confirm — and you can edit any of this after the intake call.</p>
+  </div>
+
+  <div class="order-shell">
+    <div>
+      <div class="stepper">
+        <button class="step-tab active" data-step="1"><span class="num">1</span>Package & add-ons</button>
+        <button class="step-tab" data-step="2"><span class="num">2</span>About you</button>
+        <button class="step-tab" data-step="3"><span class="num">3</span>Confirm & pay</button>
+      </div>
+
+      <div class="form-card">
+        <!-- STEP 1 -->
+        <div class="step-pane active" data-pane="1">
+          <h2 style="font-family:'Newsreader',serif;font-size:24px;margin:0 0 8px;font-weight:600;">Pick a package</h2>
+          <p style="color:var(--ink-2);font-size:14px;margin:0 0 20px;">You can change this on the intake call if you want — no fees.</p>
+
+          <div class="tier-pick" id="tier-pick">
+            <div class="tier-card" data-tier="refresh" data-price="349">
+              <div class="name">Refresh</div>
+              <div class="price">$349</div>
+              <div class="desc">Sharpen an existing resume. 7-day turnaround.</div>
+            </div>
+            <div class="tier-card selected" data-tier="career" data-price="849">
+              <div class="name">Career</div>
+              <div class="price">$849 <span style="text-decoration:line-through;color:var(--muted);font-weight:400;">$1,049</span></div>
+              <div class="desc">Resume + LinkedIn + 1 cover letter. Most popular.</div>
+            </div>
+            <div class="tier-card" data-tier="executive" data-price="1649">
+              <div class="name">Executive</div>
+              <div class="price">$1,649</div>
+              <div class="desc">Director, VP, C-suite. Bio, resume, mock prep.</div>
+            </div>
+            <div class="tier-card" data-tier="federal" data-price="549">
+              <div class="name">Federal</div>
+              <div class="price">$549</div>
+              <div class="desc">USAJobs / GS-12+. KSA-aligned, per-posting tuning.</div>
+            </div>
+          </div>
+
+          <h3 style="font-family:'Newsreader',serif;font-size:20px;margin:24px 0 12px;font-weight:600;">Add-ons</h3>
+          <div class="addon-pick" id="addons">
+            <div class="addon-pill" data-addon="cover" data-price="59"><div class="check"></div>
+              <div class="info"><div class="name">Additional cover letter</div><div class="desc">Tailored to a posting you send</div></div>
+              <div class="price">+$59</div>
+            </div>
+            <div class="addon-pill" data-addon="ats" data-price="129"><div class="check"></div>
+              <div class="info"><div class="name">ATS optimization pass</div><div class="desc">3 parsers, written report</div></div>
+              <div class="price">+$129</div>
+            </div>
+            <div class="addon-pill" data-addon="interview" data-price="199"><div class="check"></div>
+              <div class="info"><div class="name">Interview coaching session</div><div class="desc">1 hour mock loop, recorded</div></div>
+              <div class="price">+$199</div>
+            </div>
+            <div class="addon-pill" data-addon="rush" data-price="0"><div class="check"></div>
+              <div class="info"><div class="name">Rush delivery</div><div class="desc">Half the turnaround. +30% of package</div></div>
+              <div class="price" id="rush-price">+$254.70</div>
+            </div>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="vet-discount">
+            <label for="vet-discount"><strong>Veteran / active-duty discount — 15%.</strong> Active-duty, reservist, or within 12 months of separation. Verified after order; honor system at checkout.</label>
+          </div>
+
+          <div class="form-nav">
+            <span style="font-size:13px;color:var(--muted);">Step 1 of 3</span>
+            <button class="btn btn-coral" onclick="goStep(2)">Continue →</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step-pane" data-pane="2">
+          <h2 style="font-family:'Newsreader',serif;font-size:24px;margin:0 0 8px;font-weight:600;">A bit about you</h2>
+          <p style="color:var(--ink-2);font-size:14px;margin:0 0 20px;">The more you give me here, the better the intake call. Nothing is required — skip anything that's awkward to type and we'll cover it on the call.</p>
+
+          <div class="row-2-fields">
+            <div class="field"><label>Full name</label><input type="text" placeholder="Derek Kowalski"></div>
+            <div class="field"><label>Email</label><input type="email" placeholder="you@domain.com"></div>
+          </div>
+          <div class="row-2-fields">
+            <div class="field"><label>Phone (optional)</label><input type="tel" placeholder="+1 (555) 123-4567"></div>
+            <div class="field"><label>Time zone</label>
+              <select>
+                <option>America/New_York (ET)</option>
+                <option>America/Chicago (CT)</option>
+                <option>America/Denver (MT)</option>
+                <option>America/Los_Angeles (PT)</option>
+                <option>Europe/London</option>
+                <option>Other (tell me on the call)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Current LinkedIn URL <span style="color:var(--muted);font-weight:400;">— if you have one</span></label>
+            <input type="url" placeholder="linkedin.com/in/yourname">
+          </div>
+
+          <div class="row-2-fields">
+            <div class="field">
+              <label>Current role</label>
+              <input type="text" placeholder="e.g. Senior Backend Engineer">
+            </div>
+            <div class="field">
+              <label>Years in IT</label>
+              <select>
+                <option>0–2 years</option>
+                <option>3–5 years</option>
+                <option>6–9 years</option>
+                <option selected>10–14 years</option>
+                <option>15–19 years</option>
+                <option>20+ years</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Target role(s) you're aiming at</label>
+            <input type="text" placeholder="e.g. Staff SRE, Platform Eng, Director of Eng">
+            <div class="hint">Comma-separated. Anything from one specific posting to a category.</div>
+          </div>
+
+          <div class="field">
+            <label>What's the situation? <span style="color:var(--muted);font-weight:400;">— a couple sentences is plenty</span></label>
+            <textarea placeholder="e.g. Been at the same company 8 years, ready to move; current resume is basically a list of bullet points; mostly applying to platform/SRE roles at $200–250k."></textarea>
+          </div>
+
+          <div class="row-2-fields">
+            <div class="field">
+              <label>How did you find me?</label>
+              <select>
+                <option>Referral from a friend</option>
+                <option>LinkedIn / X</option>
+                <option>Google search</option>
+                <option>r/cscareerquestions / a forum</option>
+                <option>Veteran network</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Need it by</label>
+              <select>
+                <option>No rush</option>
+                <option>Within 30 days</option>
+                <option>Within 14 days (rush)</option>
+                <option>Within 7 days (rush + capacity check)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-nav">
+            <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
+            <button class="btn btn-coral" onclick="goStep(3)">Continue →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step-pane" data-pane="3">
+          <h2 style="font-family:'Newsreader',serif;font-size:24px;margin:0 0 8px;font-weight:600;">Confirm & pay</h2>
+          <p style="color:var(--ink-2);font-size:14px;margin:0 0 24px;">Card charged on submit. You'll get a calendar invite for the intake call within an hour.</p>
+
+          <h3 style="font-family:'Newsreader',serif;font-size:18px;margin:0 0 12px;font-weight:600;">Payment plan</h3>
+          <div class="tier-pick" style="grid-template-columns:1fr 1fr 1fr;">
+            <div class="tier-card selected" data-plan="full">
+              <div class="name" style="font-size:16px;">Pay in full</div>
+              <div class="desc">Single charge today</div>
+            </div>
+            <div class="tier-card" data-plan="2pay">
+              <div class="name" style="font-size:16px;">2-pay (50/50)</div>
+              <div class="desc">No fee. Second pay at draft delivery.</div>
+            </div>
+            <div class="tier-card" data-plan="4pay">
+              <div class="name" style="font-size:16px;">4-pay (Affirm)</div>
+              <div class="desc">+4%. Fee waived for veterans.</div>
+            </div>
+          </div>
+
+          <h3 style="font-family:'Newsreader',serif;font-size:18px;margin:24px 0 12px;font-weight:600;">Payment details</h3>
+          <div class="field">
+            <label>Card</label>
+            <input type="text" placeholder="•••• •••• •••• 4242" value="4242 4242 4242 4242" style="font-family:'JetBrains Mono',monospace;">
+          </div>
+          <div class="row-2-fields">
+            <div class="field"><label>Expiry</label><input type="text" placeholder="MM / YY" style="font-family:'JetBrains Mono',monospace;"></div>
+            <div class="field"><label>CVC</label><input type="text" placeholder="123" style="font-family:'JetBrains Mono',monospace;"></div>
+          </div>
+          <div class="field">
+            <label>Billing ZIP</label>
+            <input type="text" placeholder="27601" style="max-width:160px;font-family:'JetBrains Mono',monospace;">
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="agree">
+            <label for="agree">I've read the <a href="#" style="color:var(--coral-2);text-decoration:underline;">terms</a> and understand the <strong>14-day money-back window</strong> and the 2-revision-round limit on the Career package.</label>
+          </div>
+
+          <div class="form-nav">
+            <button class="btn btn-ghost" onclick="goStep(2)">← Back</button>
+            <button class="btn btn-coral btn-lg" onclick="alert('Demo only — no real charge. Confirmation flow stops here.')">Place order — <span id="final-amt">$849.00</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <aside class="summary">
+      <div class="badges-row">
+        <span class="badge badge-vet"><span class="star">★</span> Veteran-Owned</span>
+      </div>
+      <h3>Order summary</h3>
+      <div class="sub">All prices in USD</div>
+      <div id="line-items">
+        <div class="item">
+          <span class="name" id="tier-name">Career package</span>
+          <span class="price" id="tier-price">$849.00</span>
+        </div>
+      </div>
+      <div class="total">
+        <span>Total</span>
+        <span id="total-price">$849.00</span>
+      </div>
+      <div class="pay-info">
+        <strong>What happens next:</strong> calendar invite for the intake call within 1 hour. First draft delivered <span id="ttd">14</span> days from the intake call. <strong>14-day money-back guarantee</strong> after first draft.
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div id="footer-mount"></div>
+<script src="partials.js"></script>
+<script>
+  renderShell('order.html');
+
+  // URL-based tier preselect
+  const urlTier = new URLSearchParams(location.search).get('tier');
+  if (urlTier) {
+    document.querySelectorAll('.tier-card[data-tier]').forEach(c => c.classList.toggle('selected', c.dataset.tier === urlTier));
+  }
+
+  const TURNAROUND = { refresh: 7, career: 14, executive: 21, federal: 10 };
+  const TIER_LABELS = { refresh: 'Refresh package', career: 'Career package', executive: 'Executive package', federal: 'Federal package' };
+  const ADDON_LABELS = { cover: 'Additional cover letter', ats: 'ATS optimization', interview: 'Interview coaching', rush: 'Rush delivery' };
+
+  function getSelectedTier() {
+    const el = document.querySelector('.tier-card[data-tier].selected');
+    return el ? { tier: el.dataset.tier, price: parseFloat(el.dataset.price) } : { tier: 'career', price: 849 };
+  }
+
+  function recompute() {
+    const { tier, price } = getSelectedTier();
+    const items = [{ name: TIER_LABELS[tier], price }];
+
+    document.querySelectorAll('.addon-pill.checked').forEach(p => {
+      let addonPrice = parseFloat(p.dataset.price);
+      if (p.dataset.addon === 'rush') addonPrice = price * 0.30;
+      items.push({ name: ADDON_LABELS[p.dataset.addon], price: addonPrice });
+    });
+
+    let subtotal = items.reduce((s, i) => s + i.price, 0);
+    const vet = document.getElementById('vet-discount')?.checked;
+    if (vet) {
+      const disc = subtotal * 0.15;
+      items.push({ name: 'Veteran discount (15%)', price: -disc, discount: true });
+      subtotal -= disc;
+    }
+
+    document.getElementById('line-items').innerHTML = items.map(i => `
+      <div class="item ${i.discount ? 'discount' : ''}">
+        <span class="name">${i.name}</span>
+        <span class="price">${i.price < 0 ? '−' : ''}$${Math.abs(i.price).toFixed(2)}</span>
+      </div>
+    `).join('');
+    const total = `$${subtotal.toFixed(2)}`;
+    document.getElementById('total-price').textContent = total;
+    document.getElementById('final-amt').textContent = total;
+    document.getElementById('ttd').textContent = TURNAROUND[tier];
+    document.getElementById('rush-price').textContent = `+$${(price * 0.30).toFixed(2)}`;
+  }
+
+  document.querySelectorAll('.tier-card[data-tier]').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll('.tier-card[data-tier]').forEach(x => x.classList.remove('selected'));
+    c.classList.add('selected');
+    recompute();
+  }));
+  document.querySelectorAll('.tier-card[data-plan]').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll('.tier-card[data-plan]').forEach(x => x.classList.remove('selected'));
+    c.classList.add('selected');
+  }));
+  document.querySelectorAll('.addon-pill').forEach(p => p.addEventListener('click', () => {
+    p.classList.toggle('checked');
+    recompute();
+  }));
+  document.getElementById('vet-discount').addEventListener('change', recompute);
+
+  function goStep(n) {
+    document.querySelectorAll('.step-tab').forEach(t => {
+      const tn = parseInt(t.dataset.step);
+      t.classList.toggle('active', tn === n);
+      t.classList.toggle('done', tn < n);
+    });
+    document.querySelectorAll('.step-pane').forEach(p => p.classList.toggle('active', p.dataset.pane == n));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  document.querySelectorAll('.step-tab').forEach(t => t.addEventListener('click', () => goStep(parseInt(t.dataset.step))));
+
+  recompute();
+</script>
+</body>
+</html>

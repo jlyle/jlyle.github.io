@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pricing — JumpyMouse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.page-head { padding: 64px 0 32px; }
+.page-head h1 { font-family: "Newsreader", serif; font-size: clamp(40px, 5vw, 64px); margin: 12px 0 16px; line-height: 1.05; letter-spacing: -.02em; font-weight: 500; }
+.page-head h1 em { font-style: italic; color: var(--coral-2); }
+[data-theme="dark"] .page-head h1 em { color: var(--coral); }
+.page-head p { font-size: 18px; color: var(--ink-2); max-width: 60ch; margin: 0; }
+
+.tier-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 48px 0 24px; }
+@media (max-width: 1100px) { .tier-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .tier-grid { grid-template-columns: 1fr; } }
+
+.tier {
+  background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 8px; padding: 28px 24px;
+  display: flex; flex-direction: column; gap: 16px;
+  position: relative;
+}
+.tier.featured {
+  background: var(--navy-900); color: var(--paper);
+  border-color: var(--navy-900);
+  transform: translateY(-12px);
+  box-shadow: var(--shadow);
+}
+.tier.featured .price-num, .tier.featured h2 { color: var(--paper); }
+.tier.featured .price-old, .tier.featured .feat .desc { color: rgba(246,241,232,.7); }
+.tier.featured .feat-row { border-color: rgba(246,241,232,.15); }
+.tier.featured .tier-tag { background: var(--coral); color: white; }
+.tier-tag {
+  position: absolute; top: -10px; left: 24px;
+  background: var(--coral); color: white;
+  padding: 4px 10px; border-radius: 100px;
+  font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+}
+.tier h2 { font-family: "Newsreader", serif; font-size: 26px; margin: 0; font-weight: 600; letter-spacing: -.01em; }
+.tier .pitch { font-size: 13px; color: var(--ink-2); margin: 0; line-height: 1.5; min-height: 40px; }
+.tier.featured .pitch { color: rgba(246,241,232,.75); }
+.tier .price { display: flex; align-items: baseline; gap: 8px; padding: 8px 0 4px; }
+.tier .price-num { font-family: "Newsreader", serif; font-size: 44px; font-weight: 600; letter-spacing: -.02em; line-height: 1; }
+.tier .price-old { font-size: 14px; color: var(--muted); text-decoration: line-through; }
+.tier .price-suffix { font-size: 13px; color: var(--muted); }
+.tier .cta { display: block; text-align: center; padding: 12px; font-size: 14px; font-weight: 500; border-radius: var(--radius); border: 1px solid var(--line); transition: all .15s; }
+.tier .cta:hover { border-color: var(--fg); background: var(--paper-2); }
+.tier.featured .cta { background: var(--coral); border-color: var(--coral); color: white; }
+.tier.featured .cta:hover { background: var(--coral-2); border-color: var(--coral-2); }
+.tier ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0; }
+.tier .feat-row { padding: 10px 0; border-top: 1px solid var(--card-line); display: flex; gap: 10px; align-items: flex-start; font-size: 13px; }
+.tier .feat-row:first-child { border-top: 0; padding-top: 0; }
+.tier .check { color: var(--coral-2); flex-shrink: 0; padding-top: 2px; }
+.tier.featured .check { color: var(--coral); }
+.tier .feat-row.dim { color: var(--muted); }
+.tier .feat-row.dim .check { color: var(--muted); opacity: .5; }
+.tier .ttd { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--muted); padding-top: 8px; border-top: 1px solid var(--card-line); margin-top: auto; }
+
+/* Compare table */
+.compare {
+  margin: 48px 0; background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 8px; overflow: hidden;
+}
+.compare table { width: 100%; border-collapse: collapse; }
+.compare th, .compare td { padding: 14px 18px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--card-line); }
+.compare th { background: var(--paper-2); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-2); }
+[data-theme="dark"] .compare th { background: var(--navy-100); }
+.compare td:first-child { font-weight: 500; }
+.compare th:not(:first-child), .compare td:not(:first-child) { text-align: center; min-width: 130px; }
+.compare .check { color: var(--coral-2); font-size: 16px; }
+[data-theme="dark"] .compare .check { color: var(--coral); }
+.compare .x { color: var(--muted); }
+.compare .featured-col { background: color-mix(in oklab, var(--coral) 8%, var(--card)); }
+.compare tr:last-child td { border-bottom: 0; }
+
+/* Add-ons */
+.addon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 900px) { .addon-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .addon-grid { grid-template-columns: 1fr; } }
+.addon { padding: 24px; background: var(--card); border: 1px solid var(--card-line); border-radius: var(--radius); display: flex; flex-direction: column; gap: 8px; }
+.addon .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.addon h3 { font-family: "Newsreader", serif; font-size: 20px; margin: 0; font-weight: 600; }
+.addon .price { font-family: "JetBrains Mono", monospace; font-size: 14px; color: var(--coral-2); font-weight: 600; white-space: nowrap; }
+[data-theme="dark"] .addon .price { color: var(--coral); }
+.addon p { font-size: 13px; color: var(--ink-2); margin: 0; line-height: 1.5; }
+.addon .meta { font-size: 12px; color: var(--muted); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--card-line); display: flex; justify-content: space-between; }
+
+/* FAQ */
+.faq { display: flex; flex-direction: column; gap: 0; max-width: 820px; margin: 0 auto; }
+.faq details { border-bottom: 1px solid var(--line); padding: 20px 0; }
+.faq details:first-of-type { border-top: 1px solid var(--line); }
+.faq summary { font-family: "Newsreader", serif; font-size: 20px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: "JetBrains Mono", monospace; font-size: 24px; color: var(--coral-2); font-weight: 400; transition: transform .2s; }
+[data-theme="dark"] .faq summary::after { color: var(--coral); }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details p { color: var(--ink-2); margin: 12px 0 0; font-size: 15px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+
+<main>
+  <section class="page-head">
+    <div class="wrap">
+      <div class="eyebrow">Pricing</div>
+      <h1>Honest pricing. No <em>"premium AI-powered packages."</em></h1>
+      <p>Four packages, plus à-la-carte add-ons. Every package includes the intake call, two revision rounds, ATS testing, and 30 days of email support. Pricing in USD; payment plans available at checkout.</p>
+    </div>
+  </section>
+
+  <section style="padding-top: 24px;">
+    <div class="wrap">
+      <div class="tier-grid">
+
+        <div class="tier">
+          <h2>Refresh</h2>
+          <p class="pitch">You have a recent resume. It's fine. It needs to be sharp.</p>
+          <div class="price">
+            <span class="price-num">$349</span>
+            <span class="price-suffix">one-time</span>
+          </div>
+          <a href="order.html?tier=refresh" class="cta">Choose Refresh</a>
+          <ul>
+            <li class="feat-row"><span class="check">✓</span><span>30-min intake call</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>Resume rewrite (existing structure)</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>1 revision round</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>ATS-clean .docx + PDF</span></li>
+            <li class="feat-row dim"><span class="check">✓</span><span>LinkedIn rewrite</span></li>
+            <li class="feat-row dim"><span class="check">✓</span><span>Cover letter</span></li>
+          </ul>
+          <div class="ttd">7-day turnaround</div>
+        </div>
+
+        <div class="tier featured">
+          <span class="tier-tag">Most popular</span>
+          <h2>Career</h2>
+          <p class="pitch">The full rewrite — resume, LinkedIn, cover letter. The one most people pick.</p>
+          <div class="price">
+            <span class="price-num">$849</span>
+            <span class="price-old">$1,049</span>
+          </div>
+          <a href="order.html?tier=career" class="cta">Choose Career</a>
+          <ul>
+            <li class="feat-row"><span class="check">✓</span><span>60-min intake call (recorded)</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>Full resume from scratch</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>LinkedIn — headline, About, all roles</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>One targeted cover letter</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>2 revision rounds</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>ATS testing + 30-day support</span></li>
+          </ul>
+          <div class="ttd" style="border-color:rgba(246,241,232,.15);color:rgba(246,241,232,.7);">14-day turnaround</div>
+        </div>
+
+        <div class="tier">
+          <h2>Executive</h2>
+          <p class="pitch">For Director, VP, and C-suite roles. Board-ready, recruiter-vetted.</p>
+          <div class="price">
+            <span class="price-num">$1,649</span>
+          </div>
+          <a href="order.html?tier=executive" class="cta">Choose Executive</a>
+          <ul>
+            <li class="feat-row"><span class="check">✓</span><span>Two 90-min intake calls</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>Executive resume + bio</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>Full LinkedIn rebuild</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>Two cover letters</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>1 mock board-prep session</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>Unlimited revisions for 60 days</span></li>
+          </ul>
+          <div class="ttd">21-day turnaround</div>
+        </div>
+
+        <div class="tier">
+          <h2>Federal</h2>
+          <p class="pitch">USAJobs-compliant federal resumes for GS-12 through SES.</p>
+          <div class="price">
+            <span class="price-num">$549</span>
+            <span class="price-suffix">+ posting</span>
+          </div>
+          <a href="order.html?tier=federal" class="cta">Choose Federal</a>
+          <ul>
+            <li class="feat-row"><span class="check">✓</span><span>USAJobs format (KSA-aligned)</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>Per-posting customization</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>Assessment-questionnaire prep</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>Veterans' preference framing</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>2 revision rounds</span></li>
+            <li class="feat-row"><span class="check">✓</span><span>$129 / additional posting</span></li>
+          </ul>
+          <div class="ttd">10-day turnaround</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Compare table -->
+  <section class="tight">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Side by side</div>
+        <h2 class="serif">What's actually in each package.</h2>
+      </div>
+      <div class="compare">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Refresh</th>
+              <th class="featured-col">Career</th>
+              <th>Executive</th>
+              <th>Federal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Intake call</td><td>30 min</td><td class="featured-col">60 min</td><td>2 × 90 min</td><td>45 min</td></tr>
+            <tr><td>Resume — full rewrite</td><td><span class="x">—</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+            <tr><td>Resume — light edit</td><td><span class="check">✓</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+            <tr><td>LinkedIn profile</td><td><span class="x">—</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="x">—</span></td></tr>
+            <tr><td>Cover letter</td><td><span class="x">—</span></td><td class="featured-col">1</td><td>2</td><td><span class="x">—</span></td></tr>
+            <tr><td>Revision rounds</td><td>1</td><td class="featured-col">2</td><td>Unlimited / 60d</td><td>2</td></tr>
+            <tr><td>ATS testing</td><td><span class="check">✓</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+            <tr><td>Mock interview</td><td><span class="x">—</span></td><td class="featured-col"><span class="x">—</span></td><td>1 session</td><td><span class="x">—</span></td></tr>
+            <tr><td>USAJobs format</td><td><span class="x">—</span></td><td class="featured-col"><span class="x">—</span></td><td><span class="x">—</span></td><td><span class="check">✓</span></td></tr>
+            <tr><td>Email support window</td><td>14 days</td><td class="featured-col">30 days</td><td>60 days</td><td>30 days</td></tr>
+            <tr><td>Turnaround</td><td>7 days</td><td class="featured-col">14 days</td><td>21 days</td><td>10 days</td></tr>
+            <tr><td>Money-back window</td><td>14 days</td><td class="featured-col">14 days</td><td>14 days</td><td>14 days</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add-ons -->
+  <section style="background: var(--paper-2);">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">À la carte</div>
+        <h2 class="serif">Add-ons. Mix and match — or stand alone.</h2>
+        <p>Every add-on can be bought independently or stacked on a package at a 15% bundle discount.</p>
+      </div>
+      <div class="addon-grid">
+        <div class="addon">
+          <div class="top"><h3>Cover letter</h3><span class="price">$99</span></div>
+          <p>Single role-targeted cover letter. Includes one revision round.</p>
+          <div class="meta"><span>3-day turnaround</span><span>+1 round</span></div>
+        </div>
+        <div class="addon">
+          <div class="top"><h3>LinkedIn-only rewrite</h3><span class="price">$189</span></div>
+          <p>Headline, About, all roles, plus skill ordering and recommendation prompts.</p>
+          <div class="meta"><span>5-day turnaround</span><span>+2 rounds</span></div>
+        </div>
+        <div class="addon">
+          <div class="top"><h3>ATS optimization pass</h3><span class="price">$129</span></div>
+          <p>Have a resume already? I'll run it through 3 ATS parsers and patch what fails.</p>
+          <div class="meta"><span>4-day turnaround</span><span>+report</span></div>
+        </div>
+        <div class="addon">
+          <div class="top"><h3>Interview coaching</h3><span class="price">$199 / hr</span></div>
+          <p>Mock loop tailored to your target role — system design, behavioral, or hybrid. Includes recording + notes.</p>
+          <div class="meta"><span>Booked live</span><span>recorded</span></div>
+        </div>
+        <div class="addon">
+          <div class="top"><h3>Salary-negotiation session</h3><span class="price">$249</span></div>
+          <p>1-hour live call before you respond to an offer. Comp research included.</p>
+          <div class="meta"><span>48-hr availability</span><span>1 session</span></div>
+        </div>
+        <div class="addon">
+          <div class="top"><h3>Career roadmap consult</h3><span class="price">$299</span></div>
+          <p>2-hour deep dive on next 18 months — target roles, gap analysis, action plan.</p>
+          <div class="meta"><span>Booked live</span><span>+written plan</span></div>
+        </div>
+        <div class="addon">
+          <div class="top"><h3>Additional cover letter</h3><span class="price">$59</span></div>
+          <p>After your first one — tailored to a specific posting you send me.</p>
+          <div class="meta"><span>2-day turnaround</span><span>per letter</span></div>
+        </div>
+        <div class="addon">
+          <div class="top"><h3>Rush delivery</h3><span class="price">+30%</span></div>
+          <p>Halve the turnaround on any package. Capacity-dependent — book early.</p>
+          <div class="meta"><span>Subject to availability</span><span>any tier</span></div>
+        </div>
+        <div class="addon">
+          <div class="top"><h3>Veteran transition pack</h3><span class="price">$1,299</span></div>
+          <p>Career + Federal bundled, plus 1 interview-coaching session. For service members within 12 months of separation.</p>
+          <div class="meta"><span>21-day turnaround</span><span>save $447</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="wrap">
+      <div class="section-head" style="text-align: center;">
+        <div class="eyebrow">FAQ</div>
+        <h2 class="serif" style="margin: 8px auto 12px;">Questions worth asking before you buy.</h2>
+      </div>
+      <div class="faq">
+        <details open>
+          <summary>Why is your pricing higher than [cheap online resume mill]?</summary>
+          <p>Because I'm not running a content farm. Every resume I write involves a real intake call, real research into the target roles, and 8–14 hours of actual writing. If price is the deciding factor, I'm probably not the right fit — and that's fine.</p>
+        </details>
+        <details>
+          <summary>Do you write resumes outside of IT?</summary>
+          <p>No. I'm an IT lifer — Navy, Red Hat, 25 years on the inside. I'd be a worse fit than a generalist for, say, a marketing director. Stay in your lane is good advice for me too.</p>
+        </details>
+        <details>
+          <summary>What's the money-back guarantee, exactly?</summary>
+          <p>If after the intake call and first draft you don't think we're a fit, email me within 14 days of the draft delivery. Full refund — no questionnaires, no exit interview. I'd rather lose the sale than have a client who isn't getting value.</p>
+        </details>
+        <details>
+          <summary>Can I pay in installments?</summary>
+          <p>Yes. All packages support 2-pay (50/50, no fee) or 4-pay (25% × 4, +4% fee, via Affirm) at checkout. Veterans get fee-free 4-pay.</p>
+        </details>
+        <details>
+          <summary>Do you offer veteran or service-member discounts?</summary>
+          <p>Yes — 15% off any package for active-duty, reservists, and within-12-months-of-separation veterans. Just check the box on the order form; I'll verify after.</p>
+        </details>
+        <details>
+          <summary>What if I just want a quick review?</summary>
+          <p>Skip the packages — book a 30-minute resume review for $99. I'll record it and email you a transcript with everything I'd change. No obligation to do more.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-mount"></div>
+<script src="partials.js"></script>
+<script>renderShell('pricing.html');</script>
+</body>
+</html>

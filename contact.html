@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contact — JumpyMouse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.page-head { padding: 64px 0 32px; }
+.page-head h1 { font-family: "Newsreader", serif; font-size: clamp(40px, 5vw, 64px); margin: 12px 0 16px; line-height: 1.05; letter-spacing: -.02em; font-weight: 500; }
+.page-head h1 em { font-style: italic; color: var(--coral-2); }
+[data-theme="dark"] .page-head h1 em { color: var(--coral); }
+.page-head p { font-size: 18px; color: var(--ink-2); max-width: 60ch; margin: 0; }
+
+.contact-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; padding-bottom: 80px; align-items: start; }
+@media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; gap: 24px; } }
+
+.form-card { background: var(--card); border: 1px solid var(--card-line); border-radius: 8px; padding: 32px; }
+.form-card h2 { font-family: "Newsreader", serif; font-size: 28px; margin: 0 0 8px; font-weight: 600; letter-spacing: -.01em; }
+.form-card .sub { color: var(--ink-2); font-size: 14px; margin: 0 0 24px; }
+
+.field { margin-bottom: 18px; }
+.field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+.field input, .field select, .field textarea {
+  width: 100%; padding: 11px 14px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--bg); color: var(--fg); font-size: 14px; font-family: inherit;
+}
+.field textarea { resize: vertical; min-height: 140px; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--coral); }
+.row-2-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .row-2-fields { grid-template-columns: 1fr; } }
+
+.topic-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (max-width: 600px) { .topic-pick { grid-template-columns: 1fr; } }
+.topic {
+  padding: 12px; border: 1px solid var(--line); border-radius: 6px; cursor: pointer;
+  font-size: 13px; background: var(--bg); transition: all .1s; font-family: inherit;
+  text-align: left; color: var(--fg);
+}
+.topic:hover { border-color: var(--ink-2); }
+.topic.selected { border-color: var(--coral); background: color-mix(in oklab, var(--coral) 5%, var(--card)); }
+.topic .name { font-weight: 500; }
+.topic .desc { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+/* Side cards */
+.side-stack { display: flex; flex-direction: column; gap: 16px; }
+.side-card {
+  background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 8px; padding: 24px;
+}
+.side-card h3 { font-family: "Newsreader", serif; font-size: 20px; margin: 0 0 8px; font-weight: 600; }
+.side-card p { color: var(--ink-2); font-size: 14px; margin: 0 0 14px; line-height: 1.5; }
+.side-card .pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; background: var(--paper-2); border-radius: 100px; font-size: 12px; color: var(--ink-2); margin-bottom: 12px; font-family: "JetBrains Mono", monospace; }
+[data-theme="dark"] .side-card .pill { background: var(--navy-100); }
+.side-card .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; }
+
+.contact-line { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--card-line); align-items: center; font-size: 14px; }
+.contact-line:first-of-type { border-top: 0; padding-top: 0; }
+.contact-line .ic { width: 18px; height: 18px; color: var(--coral-2); flex-shrink: 0; }
+[data-theme="dark"] .contact-line .ic { color: var(--coral); }
+.contact-line .lbl { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; min-width: 60px; }
+.contact-line .val { font-family: "JetBrains Mono", monospace; font-size: 13px; }
+
+.calendly {
+  background: var(--navy-900); color: var(--paper);
+  border-radius: 8px; padding: 28px;
+  position: relative; overflow: hidden;
+}
+.calendly::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 100% 0%, rgba(217,106,74,.25), transparent 60%);
+}
+.calendly h3 { font-family: "Newsreader", serif; font-size: 26px; margin: 0 0 12px; font-weight: 600; position: relative; }
+.calendly p { color: rgba(246,241,232,.75); font-size: 14px; margin: 0 0 16px; line-height: 1.5; position: relative; }
+.calendly .calbtn {
+  display: flex; gap: 12px; align-items: center; padding: 14px 18px;
+  background: var(--coral); color: white; border-radius: 6px;
+  position: relative; transition: all .15s;
+}
+.calendly .calbtn:hover { background: var(--coral-2); }
+.calendly .calbtn .arrow { margin-left: auto; }
+
+/* FAQ small */
+.mini-faq { display: flex; flex-direction: column; }
+.mini-faq details { border-top: 1px solid var(--card-line); padding: 12px 0; }
+.mini-faq details:first-of-type { border-top: 0; padding-top: 0; }
+.mini-faq summary { font-size: 14px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+.mini-faq summary::-webkit-details-marker { display: none; }
+.mini-faq summary::after { content: "+"; font-family: "JetBrains Mono", monospace; color: var(--coral-2); }
+[data-theme="dark"] .mini-faq summary::after { color: var(--coral); }
+.mini-faq details[open] summary::after { content: "−"; }
+.mini-faq details p { color: var(--ink-2); font-size: 13px; margin: 8px 0 0; line-height: 1.5; }
+
+/* Direct contact bar */
+.direct-bar {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  margin-top: 24px;
+}
+@media (max-width: 600px) { .direct-bar { grid-template-columns: 1fr; } }
+.direct {
+  display: flex; gap: 12px; align-items: center;
+  padding: 14px 16px; background: var(--paper-2); border: 1px solid var(--card-line);
+  border-radius: 6px;
+}
+[data-theme="dark"] .direct { background: var(--navy-100); }
+.direct .ic { width: 32px; height: 32px; border-radius: 6px; background: var(--bg); display: grid; place-items: center; color: var(--coral-2); flex-shrink: 0; }
+[data-theme="dark"] .direct .ic { color: var(--coral); }
+.direct .info .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.direct .info .val { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 500; }
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+
+<main class="wrap">
+  <section class="page-head">
+    <div class="eyebrow">Contact</div>
+    <h1>Got a question? <em>Ask it.</em></h1>
+    <p>I read every email myself — usually within a day. If you'd rather just talk, the calendar's always open for a free 20-minute intro.</p>
+  </section>
+
+  <div class="contact-grid">
+    <div class="form-card">
+      <h2>Send me a note</h2>
+      <p class="sub">Reply within 1 business day. Replies come from <span class="mono" style="color:var(--coral-2);">jm@jumpymouse.co</span> — keep an eye on spam.</p>
+
+      <div class="field">
+        <label>What's this about?</label>
+        <div class="topic-pick" id="topics">
+          <button class="topic selected" data-topic="general"><div class="name">General question</div><div class="desc">Pricing, fit, "is this for me?"</div></button>
+          <button class="topic" data-topic="package"><div class="name">A specific package</div><div class="desc">Quote, customization, scope</div></button>
+          <button class="topic" data-topic="veteran"><div class="name">Veteran transition</div><div class="desc">Service-member, retiring, MOS-translation help</div></button>
+          <button class="topic" data-topic="press"><div class="name">Press / partnership</div><div class="desc">Speaking, podcasts, referral programs</div></button>
+        </div>
+      </div>
+
+      <div class="row-2-fields">
+        <div class="field">
+          <label>Your name</label>
+          <input type="text" placeholder="Jane Doe">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" placeholder="you@domain.com">
+        </div>
+      </div>
+
+      <div class="row-2-fields">
+        <div class="field">
+          <label>Current role <span style="color:var(--muted);font-weight:400;">— optional</span></label>
+          <input type="text" placeholder="e.g. Senior SRE">
+        </div>
+        <div class="field">
+          <label>How did you find me?</label>
+          <select>
+            <option>Referral from a friend</option>
+            <option>LinkedIn / X</option>
+            <option>Google search</option>
+            <option>Veteran network</option>
+            <option>A blog post</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Your message</label>
+        <textarea placeholder="Hi — I'm a Staff SRE looking to make the jump to a Director role at a smaller company. Was wondering if the Career package or the Executive package made more sense for me. Background: 12 yrs IT, 4 leading platform teams…"></textarea>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:20px;border-top:1px solid var(--card-line);">
+        <span style="font-size:13px;color:var(--muted);">By sending, you agree to my <a href="#" style="color:var(--coral-2);text-decoration:underline;">privacy policy</a>.</span>
+        <button class="btn btn-coral">Send message</button>
+      </div>
+
+      <div class="direct-bar">
+        <div class="direct">
+          <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg></div>
+          <div class="info"><div class="lbl">Email</div><div class="val">jm@jumpymouse.co</div></div>
+        </div>
+        <div class="direct">
+          <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div class="info"><div class="lbl">Phone</div><div class="val">+1 (919) 555-0142</div></div>
+        </div>
+        <div class="direct">
+          <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+          <div class="info"><div class="lbl">LinkedIn</div><div class="val">/in/jumpymouse</div></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="side-stack">
+      <div class="calendly">
+        <h3>Or grab 20 minutes on the calendar.</h3>
+        <p>Free intro call. We'll figure out if I'm the right fit. If I'm not, I'll point you to someone who is.</p>
+        <a href="#" class="calbtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Book intro call
+          <span class="arrow">→</span>
+        </a>
+      </div>
+
+      <div class="side-card">
+        <span class="pill"><span class="dot"></span>Replying within 4 hrs today</span>
+        <h3>Office hours</h3>
+        <div class="contact-line">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <span class="lbl">Hours</span>
+          <span class="val">Mon–Thu, 9a–5p ET</span>
+        </div>
+        <div class="contact-line">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span class="lbl">Based</span>
+          <span class="val">Raleigh, NC</span>
+        </div>
+        <div class="contact-line">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+          <span class="lbl">Serving</span>
+          <span class="val">US & Canada · remote</span>
+        </div>
+        <div class="contact-line">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="lbl">Avg reply</span>
+          <span class="val">~3.5 hrs · biz days</span>
+        </div>
+      </div>
+
+      <div class="side-card">
+        <h3>Common questions</h3>
+        <div class="mini-faq">
+          <details open>
+            <summary>Do you have a waitlist?</summary>
+            <p>Sometimes. As of this week — no waitlist for Refresh / Career, ~10-day wait for Executive.</p>
+          </details>
+          <details>
+            <summary>Will you sign an NDA?</summary>
+            <p>Yes — I keep a mutual NDA on file and will counter-sign yours within 24 hrs.</p>
+          </details>
+          <details>
+            <summary>Do you write for non-IT roles?</summary>
+            <p>No. I'd be a worse fit than a generalist. Happy to refer.</p>
+          </details>
+          <details>
+            <summary>Are you taking referral partners?</summary>
+            <p>Yes — 10% on the first engagement. Email "press / partnership" above.</p>
+          </details>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div id="footer-mount"></div>
+<script src="partials.js"></script>
+<script>
+  renderShell('contact.html');
+  document.querySelectorAll('.topic').forEach(t => t.addEventListener('click', () => {
+    document.querySelectorAll('.topic').forEach(x => x.classList.remove('selected'));
+    t.classList.add('selected');
+  }));
+</script>
+</body>
+</html>

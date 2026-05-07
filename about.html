@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About — JumpyMouse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.about-hero { padding: 64px 0 32px; }
+.about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 64px; align-items: start; }
+@media (max-width: 900px) { .about-grid { grid-template-columns: 1fr; } }
+.about-hero h1 { font-family: "Newsreader", serif; font-size: clamp(40px, 5vw, 68px); margin: 16px 0 24px; line-height: 1.05; letter-spacing: -.02em; font-weight: 500; }
+.about-hero h1 em { font-style: italic; color: var(--coral-2); }
+[data-theme="dark"] .about-hero h1 em { color: var(--coral); }
+.about-hero p.lede { font-size: 19px; color: var(--ink-2); line-height: 1.55; margin: 0 0 24px; }
+.about-hero p { font-size: 16px; color: var(--ink-2); line-height: 1.65; margin: 0 0 16px; }
+.about-hero strong { color: var(--fg); font-weight: 600; }
+
+.portrait-card {
+  background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 8px; overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.portrait {
+  height: 380px; background: linear-gradient(160deg, var(--navy-800), var(--navy-900));
+  position: relative; display: grid; place-items: center;
+  color: var(--paper);
+  overflow: hidden;
+}
+.portrait .silhouette {
+  width: 220px; height: 280px;
+  background: radial-gradient(ellipse at center 30%, rgba(217,106,74,.55), transparent 70%);
+  filter: blur(6px);
+}
+.portrait .badges {
+  position: absolute; top: 20px; left: 20px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.portrait .placeholder-label {
+  position: absolute; bottom: 16px; right: 16px;
+  font-size: 11px; color: rgba(246,241,232,.5); font-family: "JetBrains Mono", monospace;
+}
+.portrait-meta { padding: 24px; }
+.portrait-meta h3 { font-family: "Newsreader", serif; font-size: 24px; margin: 0 0 4px; font-weight: 600; }
+.portrait-meta .role { color: var(--coral-2); font-size: 14px; font-weight: 500; margin-bottom: 16px; }
+[data-theme="dark"] .portrait-meta .role { color: var(--coral); }
+.portrait-meta .meta-row { display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--card-line); font-size: 13px; }
+.portrait-meta .meta-row span:first-child { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: 11px; }
+.portrait-meta .meta-row span:last-child { color: var(--fg); font-weight: 500; }
+
+/* Timeline */
+.timeline { padding: 64px 0; background: var(--paper-2); }
+.timeline-track { position: relative; max-width: 880px; margin: 48px auto 0; }
+.timeline-track::before {
+  content: ""; position: absolute; left: 80px; top: 0; bottom: 0; width: 1px; background: var(--line);
+}
+@media (max-width: 600px) { .timeline-track::before { left: 30px; } }
+.tl-item { display: grid; grid-template-columns: 80px 1fr; gap: 32px; padding: 28px 0; position: relative; }
+@media (max-width: 600px) { .tl-item { grid-template-columns: 60px 1fr; gap: 16px; } }
+.tl-year { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--coral-2); font-weight: 600; padding-top: 4px; }
+[data-theme="dark"] .tl-year { color: var(--coral); }
+.tl-item::before {
+  content: ""; position: absolute; left: 76px; top: 32px; width: 9px; height: 9px;
+  background: var(--coral); border-radius: 50%; border: 2px solid var(--paper-2);
+  z-index: 1;
+}
+@media (max-width: 600px) { .tl-item::before { left: 26px; } }
+.tl-content h3 { font-family: "Newsreader", serif; font-size: 22px; margin: 0 0 4px; font-weight: 600; letter-spacing: -.01em; }
+.tl-content .place { font-size: 13px; color: var(--muted); font-family: "JetBrains Mono", monospace; margin-bottom: 8px; }
+.tl-content p { font-size: 15px; color: var(--ink-2); margin: 0; line-height: 1.55; max-width: 56ch; }
+
+/* Beliefs */
+.beliefs { padding: 80px 0; }
+.belief-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
+@media (max-width: 800px) { .belief-grid { grid-template-columns: 1fr; } }
+.belief { padding: 32px; background: var(--card); border: 1px solid var(--card-line); border-radius: var(--radius); }
+.belief .num { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--coral-2); font-weight: 600; margin-bottom: 12px; }
+[data-theme="dark"] .belief .num { color: var(--coral); }
+.belief h3 { font-family: "Newsreader", serif; font-size: 24px; margin: 0 0 12px; font-weight: 600; letter-spacing: -.01em; }
+.belief p { font-size: 15px; color: var(--ink-2); margin: 0; line-height: 1.6; }
+.belief blockquote { font-family: "Newsreader", serif; font-style: italic; font-size: 17px; color: var(--fg); margin: 12px 0 0; padding: 12px 0 0; border-top: 1px solid var(--card-line); }
+
+/* Stats strip */
+.stats {
+  padding: 64px 0; background: var(--navy-900); color: var(--paper);
+}
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+@media (max-width: 700px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+.stat { text-align: center; }
+.stat .num { font-family: "Newsreader", serif; font-size: 56px; font-weight: 600; line-height: 1; letter-spacing: -.02em; }
+.stat .num em { font-style: normal; color: var(--coral); }
+.stat .lbl { font-size: 13px; color: rgba(246,241,232,.7); margin-top: 8px; text-transform: uppercase; letter-spacing: .08em; }
+
+.cta-row { padding: 64px 0; }
+.cta-block { text-align: center; }
+.cta-block h2 { font-family: "Newsreader", serif; font-size: clamp(32px, 4vw, 48px); margin: 0 0 16px; font-weight: 500; letter-spacing: -.02em; }
+.cta-block p { font-size: 17px; color: var(--ink-2); max-width: 50ch; margin: 0 auto 24px; }
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+
+<main>
+  <section class="about-hero">
+    <div class="wrap">
+      <div class="about-grid">
+        <div>
+          <div class="eyebrow">About</div>
+          <h1>I spent 25 years <em>reading the resumes</em> you're trying to get past.</h1>
+          <p class="lede">JumpyMouse is a one-person shop. That person is me. Here's the unabridged version.</p>
+          <p>I joined the Navy at 19 and spent the better part of a decade running shipboard communications and information systems — the kind of job where a typo in a config file is a 3 a.m. problem for 200 people. I learned how to write things that worked the first time, because the alternative was unacceptable.</p>
+          <p>After the Navy I landed at <strong>Red Hat</strong>, where I stayed for 25 years across roles from sysadmin to engineering manager to internal hiring committee. Somewhere in the middle of that, I started rewriting resumes for friends, then friends-of-friends, then strangers-of-friends, until the side gig was a full calendar.</p>
+          <p>Now I'm retiring, and JumpyMouse is the front door. <strong>I write resumes for IT professionals — full stop.</strong> Not lawyers, not nurses, not finance bros. The people who keep production up at 3 a.m., the engineers translating their work into corporate-speak that recruiters can scan in 8 seconds.</p>
+        </div>
+        <div class="portrait-card">
+          <div class="portrait">
+            <div class="badges">
+              <span class="badge badge-vet" style="background:rgba(11,19,34,.6);"><span class="star">★</span> US Navy</span>
+              <span class="badge" style="background:rgba(217,106,74,.2);color:#fff;border-color:rgba(217,106,74,.4);">25 yrs at Red Hat</span>
+            </div>
+            <div class="silhouette"></div>
+            <div class="placeholder-label">[ portrait — drop your headshot here ]</div>
+          </div>
+          <div class="portrait-meta">
+            <h3>The founder</h3>
+            <div class="role">Navy veteran · ex-Red Hat · resume writer</div>
+            <div class="meta-row"><span>Based</span><span>Raleigh, NC</span></div>
+            <div class="meta-row"><span>Service</span><span>USN, '95–'01</span></div>
+            <div class="meta-row"><span>Last role</span><span>Sr. Eng Mgr, Red Hat</span></div>
+            <div class="meta-row"><span>Resumes written</span><span>680+</span></div>
+            <div class="meta-row"><span>Typing speed</span><span>89 wpm, allegedly</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="timeline">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">The path</div>
+        <h2 class="serif">How I got here.</h2>
+      </div>
+      <div class="timeline-track">
+        <div class="tl-item">
+          <div class="tl-year">1995</div>
+          <div class="tl-content">
+            <h3>Enlisted, US Navy</h3>
+            <div class="place">RTC Great Lakes → IT-A School</div>
+            <p>Information Systems Technician (IT) rating. Learned that the Navy invented half the IT vocabulary corporate America still uses, and that you only get a clean shutdown once.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">1998</div>
+          <div class="tl-content">
+            <h3>USS John C. Stennis</h3>
+            <div class="place">CVN-74 · Persian Gulf deployment</div>
+            <p>Two deployments running shipboard communications. Wrote the IT department's first standardized handoff doc, which I'm told was still in use a decade later.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2001</div>
+          <div class="tl-content">
+            <h3>Honorable discharge</h3>
+            <div class="place">Petty Officer Second Class · IT2</div>
+            <p>Out at six years to take a contractor job in Raleigh. Took a year of intentional decompression and a community-college Linux track before re-entering the workforce.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2001</div>
+          <div class="tl-content">
+            <h3>Joined Red Hat</h3>
+            <div class="place">L1 Support → Senior Systems Engineer</div>
+            <p>Started in support, moved into engineering, eventually ran teams. Rotated through GSS, services, internal IT, and product engineering. Saw the company go from ~700 people to acquired by IBM.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2014</div>
+          <div class="tl-content">
+            <h3>First time on a hiring committee</h3>
+            <div class="place">Internal mobility lead</div>
+            <p>Spent ~6 hrs a week reading resumes and doing screening calls for engineering roles. Read several thousand resumes over the next decade. Started keeping notes on patterns.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2019</div>
+          <div class="tl-content">
+            <h3>The first paid client</h3>
+            <div class="place">A friend-of-a-friend, $0 → $150</div>
+            <p>Rewrote a resume for a transitioning Marine. He landed a $135k cloud-eng role. He insisted on paying. I insisted on $50. We compromised at $150 and a steak dinner.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2024</div>
+          <div class="tl-content">
+            <h3>Started JumpyMouse — quietly</h3>
+            <div class="place">Side practice → 14-month waitlist</div>
+            <p>Officially licensed the LLC, took clients on the side. Word-of-mouth filled the calendar in 5 months.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2026</div>
+          <div class="tl-content">
+            <h3>Retired from Red Hat. Doing this full-time.</h3>
+            <div class="place">JumpyMouse Resume Co.</div>
+            <p>This site, the calendar wide open, the second career officially begun. If you're reading this, you're early.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats">
+    <div class="wrap">
+      <div class="stats-grid">
+        <div class="stat"><div class="num">680<em>+</em></div><div class="lbl">IT pros placed</div></div>
+        <div class="stat"><div class="num">3.4<em>×</em></div><div class="lbl">Avg interview lift</div></div>
+        <div class="stat"><div class="num">25<em>y</em></div><div class="lbl">Inside the industry</div></div>
+        <div class="stat"><div class="num">4.9<em>★</em></div><div class="lbl">Across 312 reviews</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Beliefs -->
+  <section class="beliefs">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">How I work</div>
+        <h2 class="serif">Five things I believe about resumes.</h2>
+        <p>Not vibes. Things I've watched play out hundreds of times from both sides of the desk.</p>
+      </div>
+      <div class="belief-grid">
+        <div class="belief">
+          <div class="num">01</div>
+          <h3>A resume is a sales doc, not a memoir.</h3>
+          <p>The reader has 8 seconds and a stack of 80. Your job isn't to be comprehensive — it's to make them stop, slow down, and want to hear more.</p>
+          <blockquote>"Brevity is the soul of getting a callback."</blockquote>
+        </div>
+        <div class="belief">
+          <div class="num">02</div>
+          <h3>Quantification beats adjectives. Every time.</h3>
+          <p>"Improved performance" is air. "Cut p99 latency 73% on a service handling $2.1B/yr" is a story. The second one gets the phone screen.</p>
+        </div>
+        <div class="belief">
+          <div class="num">03</div>
+          <h3>ATS isn't the enemy. Lazy formatting is.</h3>
+          <p>Every modern parser handles a well-built resume fine. The horror stories come from PDFs with embedded tables, ASCII art borders, and 4-column layouts. Don't.</p>
+        </div>
+        <div class="belief">
+          <div class="num">04</div>
+          <h3>Veterans are systematically undersold.</h3>
+          <p>Almost every transitioning service member I work with has been told they're "too military" by some civilian. They're not. They've just never been taught what to keep, what to translate, and what to drop.</p>
+        </div>
+        <div class="belief">
+          <div class="num">05</div>
+          <h3>The intake call is 60% of the work.</h3>
+          <p>If I get the call right, the first draft is good. If I get the call wrong, no amount of revision saves it. So I record it, listen to it twice, and quote you back to you.</p>
+        </div>
+        <div class="belief">
+          <div class="num">06</div>
+          <h3>One client at a time. Always.</h3>
+          <p>I cap at three active clients in a given week. If you can't get on the calendar, that's why. It's also why my clients tend to land within two months.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-row" style="background:var(--paper-2);">
+    <div class="wrap">
+      <div class="cta-block">
+        <h2 class="serif">Want to work together?</h2>
+        <p>Book a free 20-minute intro call. We'll figure out if I'm the right person for what you're trying to do — and if I'm not, I'll tell you who is.</p>
+        <div class="row" style="justify-content:center;">
+          <a href="order.html" class="btn btn-coral btn-lg">Start an order</a>
+          <a href="contact.html" class="btn btn-ghost btn-lg">Just say hi</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-mount"></div>
+<script src="partials.js"></script>
+<script>renderShell('about.html');</script>
+</body>
+</html>

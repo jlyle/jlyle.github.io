@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Samples — JumpyMouse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.page-head { padding: 64px 0 40px; }
+.page-head h1 { font-family: "Newsreader", serif; font-size: clamp(40px, 5vw, 64px); margin: 12px 0 16px; line-height: 1.05; letter-spacing: -.02em; font-weight: 500; }
+.page-head h1 em { font-style: italic; color: var(--coral-2); }
+[data-theme="dark"] .page-head h1 em { color: var(--coral); }
+.page-head p { font-size: 18px; color: var(--ink-2); max-width: 60ch; margin: 0; }
+
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 32px 0 0; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+.filter {
+  padding: 8px 14px; font-size: 13px; font-weight: 500;
+  background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 100px; color: var(--ink-2); cursor: pointer;
+  font-family: inherit; transition: all .15s;
+}
+.filter:hover { border-color: var(--fg); color: var(--fg); }
+.filter.active { background: var(--navy-900); border-color: var(--navy-900); color: var(--paper); }
+
+.sample-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin: 48px 0 80px; }
+@media (max-width: 900px) { .sample-grid { grid-template-columns: 1fr; } }
+
+.sample {
+  background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 8px; overflow: hidden;
+  transition: all .2s;
+}
+.sample:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.sample-thumb {
+  background: linear-gradient(140deg, var(--paper-2), var(--paper));
+  padding: 28px 28px 0;
+  height: 320px; overflow: hidden;
+  position: relative;
+  border-bottom: 1px solid var(--card-line);
+}
+[data-theme="dark"] .sample-thumb { background: linear-gradient(140deg, var(--navy-100), var(--paper-2)); }
+.mini-doc {
+  background: white; color: #1a1a1a;
+  border-radius: 3px; padding: 18px 20px;
+  font-family: "Geist", sans-serif; font-size: 7px; line-height: 1.4;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  height: 320px;
+  transform-origin: top center;
+}
+.mini-doc h3 { font-size: 14px; margin: 0 0 1px; font-family: "Newsreader", serif; font-weight: 600; color: #0f1f3a; letter-spacing: -.01em; }
+.mini-doc .role { color: #555; font-size: 8px; margin-bottom: 4px; }
+.mini-doc .meta { color: #999; font-size: 6px; letter-spacing: .04em; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #eee; }
+.mini-doc .sec { font-size: 7px; text-transform: uppercase; letter-spacing: .12em; color: #d96a4a; font-weight: 700; margin: 8px 0 4px; }
+.mini-doc .jt { font-weight: 600; color: #0f1f3a; font-size: 8px; }
+.mini-doc .jm { color: #888; font-size: 6px; margin-bottom: 2px; }
+.mini-doc ul { list-style: none; padding: 0; margin: 2px 0 6px; }
+.mini-doc ul li { padding-left: 6px; position: relative; margin-bottom: 1px; color: #2a2a2a; }
+.mini-doc ul li::before { content: "▸"; position: absolute; left: 0; color: #d96a4a; }
+.mini-doc .skills { display: flex; flex-wrap: wrap; gap: 2px; }
+.mini-doc .skills span { background: #f5efe0; color: #4a3f25; padding: 1px 4px; border-radius: 1px; font-family: "JetBrains Mono", monospace; font-size: 5.5px; }
+/* mini-doc variants */
+.mini-doc.style-mono { font-family: "JetBrains Mono", monospace; font-size: 6.5px; }
+.mini-doc.style-mono h3 { font-family: "JetBrains Mono", monospace; font-weight: 700; }
+.mini-doc.style-mono .sec { color: #1e3a6f; }
+.mini-doc.style-mono ul li::before { content: "$"; color: #1e3a6f; }
+.mini-doc.style-fed { font-family: "Times New Roman", serif; font-size: 7px; }
+.mini-doc.style-fed h3 { font-family: "Times New Roman", serif; text-transform: uppercase; letter-spacing: .02em; font-size: 12px; text-align: center; color: #000; }
+.mini-doc.style-fed .role { text-align: center; }
+.mini-doc.style-fed .meta { text-align: center; }
+.mini-doc.style-fed .sec { color: #000; border-bottom: 1px solid #000; padding-bottom: 1px; }
+.mini-doc.style-fed ul li::before { content: "•"; color: #000; }
+.mini-doc.style-exec { padding: 14px 18px; }
+.mini-doc.style-exec h3 { font-size: 16px; color: #15294d; }
+.mini-doc.style-exec .sec { color: #c8a253; letter-spacing: .2em; font-weight: 800; }
+.mini-doc.style-exec ul li::before { content: "—"; color: #c8a253; }
+
+.sample-meta { padding: 20px 24px 24px; }
+.sample-meta .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+.sample-meta h3 { font-family: "Newsreader", serif; font-size: 22px; margin: 0; font-weight: 600; line-height: 1.2; letter-spacing: -.01em; }
+.sample-meta .lvl { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--muted); white-space: nowrap; padding-top: 5px; }
+.sample-meta .desc { font-size: 14px; color: var(--ink-2); margin: 4px 0 14px; line-height: 1.5; }
+.sample-meta .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.outcome {
+  margin-top: 14px; padding: 12px 14px; background: var(--paper-2);
+  border-radius: 4px; font-size: 13px;
+  display: flex; align-items: center; gap: 10px;
+}
+[data-theme="dark"] .outcome { background: var(--navy-100); }
+.outcome .arrow { color: var(--coral-2); font-weight: 700; font-family: "JetBrains Mono", monospace; }
+[data-theme="dark"] .outcome .arrow { color: var(--coral); }
+.outcome .from { color: var(--muted); text-decoration: line-through; }
+.outcome .to { font-weight: 600; }
+
+.empty { text-align: center; padding: 80px 0; color: var(--muted); }
+.empty p { font-size: 16px; }
+</style>
+</head>
+<body>
+<div id="nav-mount"></div>
+
+<main>
+  <section class="page-head">
+    <div class="wrap">
+      <div class="eyebrow">Samples</div>
+      <h1>Ten resumes. Ten very different <em>career stories.</em></h1>
+      <p>All anonymized with permission. Each one was written from the ground up — these aren't templates I dropped names into. Click any resume to see the full version, the brief, and what changed.</p>
+
+      <div class="filters" id="filters">
+        <button class="filter active" data-tag="all">All</button>
+        <button class="filter" data-tag="ic">Individual contributor</button>
+        <button class="filter" data-tag="leader">Leadership</button>
+        <button class="filter" data-tag="security">Security</button>
+        <button class="filter" data-tag="cloud">Cloud / SRE</button>
+        <button class="filter" data-tag="federal">Federal</button>
+        <button class="filter" data-tag="transition">Career transition</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="sample-grid" id="grid"></div>
+  </div>
+</main>
+
+<div id="footer-mount"></div>
+
+<script src="partials.js"></script>
+<script>
+  renderShell('samples.html');
+
+  const SAMPLES = [
+    {
+      name: "Marcus T. Holloway",
+      role: "Senior Site Reliability Engineer",
+      level: "Staff · 11 yrs",
+      tags: ["ic", "cloud"],
+      tagLabels: ["IC", "Cloud / SRE"],
+      desc: "Came to me after 6 months of zero callbacks despite running prod for a Fortune-500. We rebuilt around quantified reliability outcomes.",
+      outcome: { from: "0 callbacks / 90 apps", to: "5 onsites in 4 weeks → Cloudflare" },
+      style: "default",
+      doc: `
+        <h3>Marcus T. Holloway</h3>
+        <div class="role">Senior Site Reliability Engineer</div>
+        <div class="meta">Austin, TX · marcus.h@mail.com · linkedin.com/in/mholloway</div>
+        <div class="sec">Summary</div>
+        <p style="margin:0 0 6px;color:#2a2a2a;">SRE with 11 years scaling Kubernetes platforms across hybrid cloud — reduced MTTR by 62% across two F500 deployments.</p>
+        <div class="sec">Experience</div>
+        <div class="jt">Staff SRE · Cloudbase Inc.</div>
+        <div class="jm">Mar 2021 – Present</div>
+        <ul><li>Led migration of 240 microservices to GKE</li><li>Cut on-call paging volume 47% via SLO redesign</li><li>Owns capacity-planning forecast model used by 14 teams</li></ul>
+        <div class="jt">Senior SRE · Northgate Health</div>
+        <div class="jm">Jun 2018 – Feb 2021</div>
+        <ul><li>Built incident-response runbook adopted org-wide</li></ul>`
+    },
+    {
+      name: "Priya N. Ramaswamy",
+      role: "Cloud Security Architect",
+      level: "Principal · 14 yrs",
+      tags: ["ic", "security", "cloud"],
+      tagLabels: ["IC", "Security"],
+      desc: "Pivoting from compliance-heavy regulated work into pure-play SaaS security. Needed to make audit experience read as architecture experience.",
+      outcome: { from: "$165k FedRAMP role", to: "$248k Principal at Vector Health" },
+      style: "default",
+      doc: `
+        <h3>Priya N. Ramaswamy</h3>
+        <div class="role">Cloud Security Architect</div>
+        <div class="meta">Remote · priya.r@mail.com · linkedin.com/in/priya-ram</div>
+        <div class="sec">Core Skills</div>
+        <div class="skills"><span>AWS</span><span>Zero-Trust</span><span>SOC2</span><span>Terraform</span><span>IAM</span><span>K8s</span></div>
+        <div class="sec">Experience</div>
+        <div class="jt">Principal Security Engineer · Vector Health</div>
+        <div class="jm">Sep 2022 – Present</div>
+        <ul><li>Designed zero-trust mesh covering 4,200 endpoints</li><li>Closed FedRAMP-Moderate audit with zero findings</li><li>Reduced IAM-related P1s by 81% in 18 months</li></ul>
+        <div class="jt">Senior Security Engineer · Govalt Systems</div>
+        <div class="jm">Aug 2018 – Sep 2022</div>`
+    },
+    {
+      name: "Lt. Cmdr. James K. Whitford (Ret.)",
+      role: "IT Operations Director",
+      level: "Director · 24 yrs (Navy)",
+      tags: ["leader", "transition"],
+      tagLabels: ["Leadership", "Transition"],
+      desc: "Retiring O-5 with 24 years running shipboard IT and shore-based comms. Brutal civilian translation problem — every line was acronym soup.",
+      outcome: { from: "Ranks → Roles", to: "Director of IT Ops at Lockheed" },
+      style: "default",
+      doc: `
+        <h3>James K. Whitford</h3>
+        <div class="role">IT Operations Director · Veteran</div>
+        <div class="meta">Norfolk, VA · jkw@mail.com · TS/SCI cleared</div>
+        <div class="sec">Profile</div>
+        <p style="margin:0 0 6px;color:#2a2a2a;">24-year Naval IT leader transitioning to civilian operations. Ran 84-person teams across 3 ship classes. Budget authority to $14M/yr.</p>
+        <div class="sec">Leadership Experience</div>
+        <div class="jt">IT Department Head · USS Constellation</div>
+        <div class="jm">2021 – 2025</div>
+        <ul><li>Led 84-person org spanning networks, comms, cybersecurity</li><li>Authority over $14M annual operating budget</li><li>Restored mission-critical systems during 2023 deployment</li></ul>`
+    },
+    {
+      name: "Sara H. Lindqvist",
+      role: "Engineering Manager → Director",
+      level: "EM · 9 yrs IC + 4 mgmt",
+      tags: ["leader"],
+      tagLabels: ["Leadership"],
+      desc: "Strong EM trying to make the leap to Director. Resume read like an IC's. We rebuilt around team outcomes, scope, and money.",
+      outcome: { from: "EM at $215k", to: "Director Eng, Snowflake — $312k" },
+      style: "default",
+      doc: `
+        <h3>Sara H. Lindqvist</h3>
+        <div class="role">Engineering Manager · Data Platform</div>
+        <div class="meta">Seattle, WA · sara.l@mail.com</div>
+        <div class="sec">Leadership Profile</div>
+        <p style="margin:0 0 6px;color:#2a2a2a;">EM growing a 22-person platform org through hypergrowth. Hired 14, performance-managed 3 out, kept regretted attrition at 4%.</p>
+        <div class="sec">Experience</div>
+        <div class="jt">Engineering Manager II · Atlasreach</div>
+        <div class="jm">Jul 2022 – Present</div>
+        <ul><li>Grew Data Platform team from 8 to 22 engineers</li><li>Owned $4.1M annual platform budget</li><li>Shipped data-governance product gen'ing $11M ARR</li></ul>`
+    },
+    {
+      name: "Devontae Carter",
+      role: "Senior DevOps Engineer",
+      level: "Senior · 7 yrs",
+      tags: ["ic", "cloud"],
+      tagLabels: ["IC", "Cloud / SRE"],
+      desc: "Self-taught engineer with bootcamp background. Worried his lack of CS degree was getting him filtered. We led with credentials and outcomes.",
+      outcome: { from: "Filtered by 73% ATS", to: "Senior DevOps at GitLab" },
+      style: "mono",
+      doc: `
+        <h3>devontae_carter</h3>
+        <div class="role">~/senior-devops-engineer</div>
+        <div class="meta">$ remote · dev@carter.dev · github.com/dvcarter</div>
+        <div class="sec">// stack</div>
+        <div class="skills"><span>terraform</span><span>aws</span><span>argocd</span><span>kubernetes</span><span>go</span><span>github-actions</span></div>
+        <div class="sec">// experience</div>
+        <div class="jt">[devops/senior] @ Riverline</div>
+        <div class="jm">2023.04 → present</div>
+        <ul><li>Migrated CI from Jenkins → GH Actions, -68% build time</li><li>Authored Terraform modules used across 12 services</li><li>On-call rotation lead, MTTR cut from 47min → 12min</li></ul>`
+    },
+    {
+      name: "Dr. Chen-Wei Liu",
+      role: "ML Platform Engineer",
+      level: "Staff · PhD + 8 yrs",
+      tags: ["ic", "cloud"],
+      tagLabels: ["IC", "Cloud / SRE"],
+      desc: "Brilliant academic background, but the resume read like a CV. We cut publications, foregrounded production systems work.",
+      outcome: { from: "8 phone screens, 0 onsites", to: "Staff ML Infra at Stripe" },
+      style: "default",
+      doc: `
+        <h3>Chen-Wei Liu</h3>
+        <div class="role">Staff ML Platform Engineer</div>
+        <div class="meta">SF, CA · cwl@mail.com</div>
+        <div class="sec">Summary</div>
+        <p style="margin:0 0 6px;color:#2a2a2a;">ML infra engineer building feature stores and training platforms — 8 yrs production, prior PhD in distributed systems.</p>
+        <div class="sec">Experience</div>
+        <div class="jt">Staff Engineer, ML Platform · Lattice AI</div>
+        <div class="jm">May 2021 – Present</div>
+        <ul><li>Built feature store serving 940M rows/day at p99 < 8ms</li><li>Led training-orchestration rebuild on Ray, 4× throughput</li><li>Mentor for 3 senior engineers, IC growth track</li></ul>`
+    },
+    {
+      name: "GS-13 Federal Resume — Anonymous",
+      role: "Cybersecurity Specialist · GS-13",
+      level: "Federal · 11 yrs",
+      tags: ["federal", "security"],
+      tagLabels: ["Federal", "Security"],
+      desc: "Moving from a contractor role into permanent GS-13 — required reformatting to USAJobs spec, plus assessment-questionnaire prep.",
+      outcome: { from: "Best Qualified, no refs", to: "Selected — DoD CIO office" },
+      style: "fed",
+      doc: `
+        <h3>Anonymous Applicant</h3>
+        <div class="role">Cybersecurity Specialist (INFOSEC) · GS-2210-13</div>
+        <div class="meta">Citizenship: U.S. · Clearance: TS/SCI · Veterans' Pref: 5pt</div>
+        <div class="sec">Work Experience</div>
+        <div class="jt">Sr. Cybersecurity Analyst · Govalt Federal</div>
+        <div class="jm">06/2021 – Present · 40 hrs/wk · Salary: $134,400</div>
+        <p style="margin:0 0 4px;color:#000;">Supervisor: J. Thompson (may contact)</p>
+        <ul><li>Led ATO process for FISMA-High system serving 18,000 users</li><li>Authored 14 SSPs, 9 POA&Ms; closed 31 of 33 audit findings</li><li>Developed RMF training adopted by 3 partner agencies</li></ul>`
+    },
+    {
+      name: "Olivia M. Brennan",
+      role: "Solutions Architect",
+      level: "Senior · 12 yrs",
+      tags: ["ic", "cloud"],
+      tagLabels: ["IC", "Cloud / SRE"],
+      desc: "Pre-sales SA at a vendor wanting to move customer-side. Resume was all 'closed deals' — needed to read as an architect, not a seller.",
+      outcome: { from: "Vendor SA · $178k", to: "Sr. Architect, Cloudflare · $245k" },
+      style: "default",
+      doc: `
+        <h3>Olivia M. Brennan</h3>
+        <div class="role">Senior Solutions Architect · Hybrid Cloud</div>
+        <div class="meta">Denver, CO · obrennan@mail.com</div>
+        <div class="sec">Profile</div>
+        <p style="margin:0 0 6px;color:#2a2a2a;">Architect translating large-enterprise infra problems into actionable migration plans. 12 yrs designing for healthcare, fintech, gov clients.</p>
+        <div class="sec">Selected Engagements</div>
+        <div class="jt">Lead Architect · United Hospitals migration</div>
+        <div class="jm">2023 – 2024 · $42M program</div>
+        <ul><li>Designed AWS landing zone for 312 clinical apps</li><li>Authored DR runbook honored during real outage event</li></ul>`
+    },
+    {
+      name: "Emir T. Yildiz",
+      role: "Product Manager → Sr. PM",
+      level: "PM · 6 yrs",
+      tags: ["leader", "transition"],
+      tagLabels: ["Leadership", "Transition"],
+      desc: "Engineer-turned-PM with 4 years still reading as 'tech lead.' Reframed around customer-facing outcomes and revenue-tied launches.",
+      outcome: { from: "PM internally only", to: "Sr. PM, HashiCorp" },
+      style: "default",
+      doc: `
+        <h3>Emir T. Yildiz</h3>
+        <div class="role">Senior Product Manager · Developer Tools</div>
+        <div class="meta">NYC · emir.y@mail.com</div>
+        <div class="sec">Recent Outcomes</div>
+        <ul><li>Owned API platform billing $7.2M ARR — +38% YoY</li><li>Shipped governance feature unblocking 4 enterprise renewals</li><li>Built product-strategy doc adopted as Q4 OKR target</li></ul>
+        <div class="sec">Experience</div>
+        <div class="jt">Product Manager II · Devbox</div>
+        <div class="jm">Apr 2022 – Present</div>`
+    },
+    {
+      name: "Margaret S. Whitfield",
+      role: "VP Engineering",
+      level: "Executive · 22 yrs",
+      tags: ["leader"],
+      tagLabels: ["Leadership"],
+      desc: "Exec resume — needed gravitas, brevity, and board-room outcomes. Cut from 4 pages to 2, foregrounded business impact.",
+      outcome: { from: "VP Eng, $410k", to: "CTO, Series-C SaaS, $580k + 0.9%" },
+      style: "exec",
+      doc: `
+        <h3>Margaret S. Whitfield</h3>
+        <div class="role">Chief Technology Officer Candidate</div>
+        <div class="meta">San Francisco · mwhitfield@mail.com</div>
+        <div class="sec">Executive Profile</div>
+        <p style="margin:0 0 6px;color:#2a2a2a;">22-year engineering leader. Scaled three orgs through Series B → IPO. Last role: VP Eng, 340 engineers, $94M opex.</p>
+        <div class="sec">Outcomes</div>
+        <ul><li>Architected platform that supported 11× revenue growth ('19–'24)</li><li>Led acquisition diligence for $260M acqui-hire</li><li>Hired 4 directs now sitting in VP / CTO seats</li></ul>`
+    }
+  ];
+
+  function render(filter = 'all') {
+    const grid = document.getElementById('grid');
+    const filtered = filter === 'all' ? SAMPLES : SAMPLES.filter(s => s.tags.includes(filter));
+    if (!filtered.length) {
+      grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><p>No samples in that category yet — check back soon.</p></div>';
+      return;
+    }
+    grid.innerHTML = filtered.map(s => `
+      <article class="sample">
+        <div class="sample-thumb">
+          <div class="mini-doc style-${s.style}">${s.doc}</div>
+        </div>
+        <div class="sample-meta">
+          <div class="top">
+            <h3>${s.name}</h3>
+            <span class="lvl">${s.level}</span>
+          </div>
+          <div class="role" style="font-size:14px;color:var(--coral-2);font-weight:500;margin-bottom:6px;">${s.role}</div>
+          <p class="desc">${s.desc}</p>
+          <div class="tags">${s.tagLabels.map(t => `<span class="chip">${t}</span>`).join('')}</div>
+          <div class="outcome">
+            <span class="from">${s.outcome.from}</span>
+            <span class="arrow">→</span>
+            <span class="to">${s.outcome.to}</span>
+          </div>
+        </div>
+      </article>
+    `).join('');
+  }
+
+  render('all');
+  document.querySelectorAll('.filter').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.filter').forEach(x => x.classList.toggle('active', x === b));
+    render(b.dataset.tag);
+  }));
+</script>
+</body>
+</html>
