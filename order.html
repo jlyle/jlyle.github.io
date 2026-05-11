@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Start an order — JumpyMouse</title>
+<title>Start an order — JumpyMouse LLC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -146,24 +146,19 @@
           <p style="color:var(--ink-2);font-size:14px;margin:0 0 20px;">You can change this on the intake call if you want — no fees.</p>
 
           <div class="tier-pick" id="tier-pick">
-            <div class="tier-card" data-tier="refresh" data-price="349">
+            <div class="tier-card" data-tier="refresh" data-price="75">
               <div class="name">Refresh</div>
-              <div class="price">$349</div>
+              <div class="price">$75</div>
               <div class="desc">Sharpen an existing resume. 7-day turnaround.</div>
             </div>
-            <div class="tier-card selected" data-tier="career" data-price="849">
+            <div class="tier-card selected" data-tier="career" data-price="150">
               <div class="name">Career</div>
-              <div class="price">$849 <span style="text-decoration:line-through;color:var(--muted);font-weight:400;">$1,049</span></div>
+              <div class="price">$150</div>
               <div class="desc">Resume + LinkedIn + 1 cover letter. Most popular.</div>
             </div>
-            <div class="tier-card" data-tier="executive" data-price="1649">
-              <div class="name">Executive</div>
-              <div class="price">$1,649</div>
-              <div class="desc">Director, VP, C-suite. Bio, resume, mock prep.</div>
-            </div>
-            <div class="tier-card" data-tier="federal" data-price="549">
+            <div class="tier-card" data-tier="federal" data-price="450">
               <div class="name">Federal</div>
-              <div class="price">$549</div>
+              <div class="price">$450</div>
               <div class="desc">USAJobs / GS-12+. KSA-aligned, per-posting tuning.</div>
             </div>
           </div>
@@ -190,7 +185,7 @@
 
           <div class="checkbox-row">
             <input type="checkbox" id="vet-discount">
-            <label for="vet-discount"><strong>Veteran / active-duty discount — 15%.</strong> Active-duty, reservist, or within 12 months of separation. Verified after order; honor system at checkout.</label>
+            <label for="vet-discount"><strong>Veteran / active-duty discount — 15%.</strong> All veterans and service members across every branch — active-duty, reserve, National Guard, separated, and retired. Verified after order; honor system at checkout.</label>
           </div>
 
           <div class="form-nav">
@@ -327,7 +322,7 @@
 
           <div class="form-nav">
             <button class="btn btn-ghost" onclick="goStep(2)">← Back</button>
-            <button class="btn btn-coral btn-lg" onclick="alert('Demo only — no real charge. Confirmation flow stops here.')">Place order — <span id="final-amt">$849.00</span></button>
+            <button class="btn btn-coral btn-lg" onclick="alert('Demo only — no real charge. Confirmation flow stops here.')">Place order — <span id="final-amt">$150.00</span></button>
           </div>
         </div>
       </div>
@@ -343,12 +338,12 @@
       <div id="line-items">
         <div class="item">
           <span class="name" id="tier-name">Career package</span>
-          <span class="price" id="tier-price">$849.00</span>
+          <span class="price" id="tier-price">$150.00</span>
         </div>
       </div>
       <div class="total">
         <span>Total</span>
-        <span id="total-price">$849.00</span>
+        <span id="total-price">$150.00</span>
       </div>
       <div class="pay-info">
         <strong>What happens next:</strong> calendar invite for the intake call within 1 hour. First draft delivered <span id="ttd">14</span> days from the intake call. <strong>14-day money-back guarantee</strong> after first draft.
@@ -368,13 +363,13 @@
     document.querySelectorAll('.tier-card[data-tier]').forEach(c => c.classList.toggle('selected', c.dataset.tier === urlTier));
   }
 
-  const TURNAROUND = { refresh: 7, career: 14, executive: 21, federal: 10 };
-  const TIER_LABELS = { refresh: 'Refresh package', career: 'Career package', executive: 'Executive package', federal: 'Federal package' };
+  const TURNAROUND = { refresh: 7, career: 14, federal: 10 };
+  const TIER_LABELS = { refresh: 'Refresh package', career: 'Career package', federal: 'Federal package' };
   const ADDON_LABELS = { cover: 'Additional cover letter', ats: 'ATS optimization', interview: 'Interview coaching', rush: 'Rush delivery' };
 
   function getSelectedTier() {
     const el = document.querySelector('.tier-card[data-tier].selected');
-    return el ? { tier: el.dataset.tier, price: parseFloat(el.dataset.price) } : { tier: 'career', price: 849 };
+    return el ? { tier: el.dataset.tier, price: parseFloat(el.dataset.price) } : { tier: 'career', price: 150 };
   }
 
   function recompute() {

@@ -18,7 +18,7 @@
         <div class="nav-inner">
           <a href="index.html" class="brand">
             <div class="brand-mark">JM</div>
-            <span>JumpyMouse</span>
+            <span>JumpyMouse LLC</span>
           </a>
           <div class="nav-links">${links}</div>
           <div class="nav-cta">
@@ -40,7 +40,7 @@
             <div>
               <a href="index.html" class="brand" style="margin-bottom: 16px;">
                 <div class="brand-mark">JM</div>
-                <span>JumpyMouse</span>
+                <span>JumpyMouse LLC</span>
               </a>
               <p style="color: var(--ink-2); font-size: 14px; max-width: 36ch; margin: 12px 0 16px;">Resumes, LinkedIn profiles, and career strategy for IT professionals — written by someone who's been in the trenches.</p>
               <span class="badge badge-vet"><span class="star">★</span> Veteran-Owned · Navy</span>
@@ -73,7 +73,7 @@
             </div>
           </div>
           <div class="footer-bottom">
-            <span>© 2026 JumpyMouse Resume Co. · All rights reserved.</span>
+            <span>© 2026 JumpyMouse LLC · All rights reserved.</span>
             <span class="mono">v1.0 · Made for IT pros</span>
           </div>
         </div>
